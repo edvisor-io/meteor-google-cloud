@@ -23,9 +23,9 @@ export default class AppEngineInstance {
       });
     }
 
-    // Create app.yml file
+    // Create app.yaml file
     const app = yaml.safeDump(this.appSettings);
-    shell.exec(`echo '${app}' >${this.workingDir}/app.yml`);
+    shell.exec(`echo '${app}' >${this.workingDir}/app.yaml`);
 
     // Create Dockerfile
     const nodeVersion = shell.exec('meteor node -v', { silent: true }).stdout.trim();
