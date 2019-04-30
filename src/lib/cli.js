@@ -2,6 +2,7 @@
 
 import program from 'commander';
 import shell from 'shelljs';
+import tmp from 'tmp';
 import updateNotifier from 'update-notifier';
 import winston from 'winston';
 import pkg from '../../package.json';
@@ -68,6 +69,8 @@ export default async function startup() {
     appEngine.prepareBundle();
     appEngine.deployBundle();
   } catch (error) {
+    tmp.setGracefulCleanup();
+
     winston.error(error.message);
     process.exit(1);
   }
