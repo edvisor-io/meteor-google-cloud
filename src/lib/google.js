@@ -1,7 +1,6 @@
 // Google methods
 
 import omit from 'lodash.omit';
-import tmp from 'tmp';
 import shell from 'shelljs';
 import winston from 'winston';
 import jsonpack from 'jsonpack';
@@ -24,13 +23,17 @@ export default class AppEngineInstance {
     // If no METEOR_SETTINGS was defined in the app.yaml, we set the one we have
     if (!this.appSettings.env_variables.METEOR_SETTINGS) {
       Object.assign(this.appSettings.env_variables, {
-        METEOR_SETTINGS: jsonpack.pack(this.meteorSettings || {}),
+        METEOR_SETTINGS: '',
       });
     }
 
     // Create app.yaml file
     const app = yaml.safeDump(this.appSettings);
-    shell.exec(`echo '${app}' >${this.workingDir}/app.yaml`);
+    if (!this.appSettings.env_variables.METEOR_SETTINGS) {
+      app.replace('METEOR_SETTINGS:', `METEOR_SETTINGS: >- \n '${jsonpack.pack(this.meteorSettings || {})}'`);
+    }
+
+    shell.exec(`echo '${app}' >${this.workingDir}/bundle/app.yaml`);
 
     // Create Dockerfile
     const nodeVersion = shell.exec('meteor node -v', { silent: true }).stdout.trim();
@@ -42,12 +45,12 @@ export default class AppEngineInstance {
       .replace('{{ nodeVersion }}', nodeVersion)
       .replace('{{ npmVersion }}', npmVersion);
 
-    shell.exec(`echo '${docker}' >${this.workingDir}/Dockerfile`);
+    shell.exec(`echo '${docker}' >${this.workingDir}/bundle/Dockerfile`);
   }
 
   async deployBundle() {
     winston.debug('deploy to App Engine');
-    shell.exec(`cd ${this.workingDir}`);
+    shell.exec(`cd ${this.workingDir}/bundle`);
     shell.exec('gcloud app deploy -q');
   }
 }
