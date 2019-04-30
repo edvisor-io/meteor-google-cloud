@@ -1,6 +1,9 @@
 runtime: custom
 env: flex
 threadsafe: true
+zones:
+- us-east1-b
+- us-east1-c
 network:
   session_affinity: true
 automatic_scaling:
