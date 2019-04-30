@@ -26,10 +26,10 @@ export default class AppEngineInstance {
     });
 
     // Create app.yaml file
-    const app = yaml.safeDump(this.appSettings);
+    let app = yaml.safeDump(this.appSettings);
 
     // We add the Meteor settings now to avoid it being compiled to YAML
-    app.replace('METEOR_SETTINGS:', `METEOR_SETTINGS: >- \n '${jsonpack.pack(this.meteorSettings || {})}'`);
+    app = app.replace('METEOR_SETTINGS:', `METEOR_SETTINGS: >- \n '${jsonpack.pack(this.meteorSettings || {})}' \n`);
 
     shell.exec(`echo '${app}' >${this.workingDir}/bundle/app.yaml`);
 
