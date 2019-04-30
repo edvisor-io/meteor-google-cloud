@@ -60,14 +60,15 @@ function () {
   _createClass(AppEngineInstance, [{
     key: "prepareBundle",
     value: function prepareBundle() {
-      // Create app.yml file
-      var app = _jsYaml.default.safeDump(this.appSettings);
-
-      if (!app.env_variables.METEOR_SETTINGS) {
-        Object.assign(app.env_variables, {
+      // If no METEOR_SETTINGS was defined in the app.yaml, we set the one we have
+      if (!this.appSettings.env_variables.METEOR_SETTINGS) {
+        Object.assign(this.appSettings.env_variables, {
           METEOR_SETTINGS: (0, _jsonpack.default)(this.meteorSettings || {})
         });
-      }
+      } // Create app.yml file
+
+
+      var app = _jsYaml.default.safeDump(this.appSettings);
 
       _shelljs.default.exec(`echo '${app}' >${this.workingDir}/app.yml`); // Create Dockerfile
 
