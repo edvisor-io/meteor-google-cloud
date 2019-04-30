@@ -28,12 +28,15 @@ export default class AppEngineInstance {
     let app = yaml.safeDump(this.appSettings);
 
     // We add the Meteor settings now to avoid it being compiled to YAML
-    const compactSettings = JSON.stringify(this.meteorSettings || {}, null, 0);
-    app = app
-      .replace('METEOR_SETTINGS:', `METEOR_SETTINGS: ${compactSettings} \n`)
+    const compactSettings = JSON
+      .stringify(this.meteorSettings || {}, null, 0)
+      // It will remove all non-printable characters.
+      // This are all characters NOT within the ASCII HEX space 0x20-0x7E.
+      .replace(/[^\x20-\x7E]/gmi, '')
       .replace(/[^\x20-\x7E]/gmi, '');
-    // It will remove all non-printable characters.
-    // This are all characters NOT within the ASCII HEX space 0x20-0x7E.
+
+    app = app
+      .replace('METEOR_SETTINGS:', `METEOR_SETTINGS: ${compactSettings} \n`);
 
     shell.exec(`echo '${app}' >${this.workingDir}/bundle/app.yaml`);
 
