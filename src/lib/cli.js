@@ -18,9 +18,9 @@ updateNotifier({ pkg }).notify();
 program
   .description(pkg.description)
   .version(`v${pkg.version}`, '-v, --version')
-  .option('-s, --settings <path>', 'path to settings file (settings.json)', '../../examples/settings.json')
-  .option('-c, --app <path>', 'path to app.yml config file', '../../examples/app.yml')
-  .option('-d, --docker <path>', 'path to Dockerfile fle', '../../examples/Dockerfile.yml')
+  .option('-s, --settings <path>', 'path to settings file (settings.json)', '../examples/settings.json')
+  .option('-c, --app <path>', 'path to app.yml config file')
+  .option('-d, --docker <path>', 'path to Dockerfile fle', '../examples/Dockerfile.yml')
   .option('-t, --test', 'enable debug mode')
   .option('-q, --quiet', 'enable quite mode')
   .parse(process.argv);
