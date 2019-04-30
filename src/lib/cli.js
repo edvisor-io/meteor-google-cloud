@@ -6,6 +6,8 @@ import updateNotifier from 'update-notifier';
 import winston from 'winston';
 import pkg from '../../package.json';
 import { validateGCloud, validateSettings, validateMeteor } from './validation';
+import compileBundle from './bundle';
+import AppEngineInstance from './google';
 
 // Notify user of available updates
 updateNotifier({ pkg }).notify();
@@ -14,9 +16,10 @@ updateNotifier({ pkg }).notify();
 program
   .description(pkg.description)
   .version(`v${pkg.version}`, '-v, --version')
-  .option('-s, --settings <path>', 'path to settings file (settings.json)', 'settings.json')
-  .option('-c, --config <path>', 'path to GCP Deployment Manager config file', 'config.yml')
-  .option('-d, --debug', 'enable debug mode')
+  .option('-s, --settings <path>', 'path to settings file (settings.json)', '../../examples/settings.json')
+  .option('-c, --app <path>', 'path to app.yml config file', '../../examples/app.yml')
+  .option('-d, --docker <path>', 'path to Dockerfile fle', '../../examples/Dockerfile.yml')
+  .option('-t, --test', 'enable debug mode')
   .option('-q, --quiet', 'enable quite mode')
   .parse(process.argv);
 
@@ -33,7 +36,7 @@ if (program.quiet === true) {
 }
 
 // Toggle Debug mode based on user preference
-if (program.debug === true) {
+if (program.test === true) {
   winston.level = 'debug';
 }
 
@@ -46,8 +49,17 @@ export default async function startup() {
     validateMeteor();
 
     // Validate settings file(s)
-    const settingsFilePath = program.settings;
     const settingsFile = validateSettings(program.settings);
+    const appFile = validateSettings(program.app);
+    const dockerFile = validateSettings(program.docker);
+
+    // Create Meteor bundle
+    compileBundle();
+
+    // Set up GCP App Engine instance
+    const appEngine = new AppEngineInstance({ settingsFile, appFile, dockerFile });
+    appEngine.prepareBundle();
+    appEngine.deployBundle();
   } catch (error) {
     winston.error(error.message);
     process.exit(1);
