@@ -21,7 +21,7 @@ program
   .option('-s, --settings <path>', 'path to settings file (settings.json)', '../examples/settings.json')
   .option('-c, --app <path>', 'path to app.yml config file')
   .option('-d, --docker <path>', 'path to Dockerfile fle', '../examples/Dockerfile.yml')
-  .option('-t, --test', 'enable debug mode')
+  .option('-v, --verbose', 'enable verbose mode')
   .option('-q, --quiet', 'enable quite mode')
   .parse(process.argv);
 
@@ -38,7 +38,7 @@ if (program.quiet === true) {
 }
 
 // Toggle Debug mode based on user preference
-if (program.test === true) {
+if (program.verbose === true) {
   winston.level = 'debug';
 }
 
