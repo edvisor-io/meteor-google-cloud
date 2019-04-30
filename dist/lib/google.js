@@ -47,14 +47,15 @@ function () {
   function AppEngineInstance(_ref) {
     var settingsFile = _ref.settingsFile,
         dockerFile = _ref.dockerFile,
-        appFile = _ref.appFile;
+        appFile = _ref.appFile,
+        workingDir = _ref.workingDir;
 
     _classCallCheck(this, AppEngineInstance);
 
     this.meteorSettings = (0, _lodash.default)(settingsFile, 'meteor-google-cloud');
     this.dockerFile = dockerFile;
     this.appSettings = appFile;
-    this.workingDir = _tmp.default.dirSync().name;
+    this.workingDir = workingDir;
   }
 
   _createClass(AppEngineInstance, [{

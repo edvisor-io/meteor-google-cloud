@@ -22,7 +22,7 @@ function compileBundle() {
   _winston.default.info('Compiling application bundle'); // Generate Meteor build
 
 
-  _winston.default.debug('generate meteor build');
+  _winston.default.debug(`generate meteor build at ${workingDir}`);
 
   _shelljs.default.exec(`rm -rf ${workingDir}`);
 
@@ -40,4 +40,8 @@ function compileBundle() {
       _winston.default.debug(`deleted symlink at '${symlinkPath}'`);
     }
   });
+
+  return {
+    workingDir
+  };
 }

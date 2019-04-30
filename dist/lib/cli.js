@@ -68,7 +68,8 @@ function _startup() {
   _startup = _asyncToGenerator(
   /*#__PURE__*/
   regeneratorRuntime.mark(function _callee() {
-    var settingsFile, appFile, dockerFile, appEngine;
+    var settingsFile, appFile, dockerFile, _compileBundle, workingDir, appEngine;
+
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -83,12 +84,13 @@ function _startup() {
               appFile = (0, _validation.validateApp)(_commander.default.app);
               dockerFile = (0, _validation.getDocker)(_commander.default.docker); // Create Meteor bundle
 
-              (0, _bundle.default)(); // Set up GCP App Engine instance
+              _compileBundle = (0, _bundle.default)(), workingDir = _compileBundle.workingDir; // Set up GCP App Engine instance
 
               appEngine = new _google.default({
                 settingsFile,
                 appFile,
-                dockerFile
+                dockerFile,
+                workingDir
               });
               appEngine.prepareBundle();
               appEngine.deployBundle();
