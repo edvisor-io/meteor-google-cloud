@@ -8,11 +8,16 @@ import jsonpack from 'jsonpack';
 import yaml from 'js-yaml';
 
 export default class AppEngineInstance {
-  constructor({ settingsFile, dockerFile, appFile }) {
+  constructor({
+    settingsFile,
+    dockerFile,
+    appFile,
+    workingDir,
+  }) {
     this.meteorSettings = omit(settingsFile, 'meteor-google-cloud');
     this.dockerFile = dockerFile;
     this.appSettings = appFile;
-    this.workingDir = tmp.dirSync().name;
+    this.workingDir = workingDir;
   }
 
   prepareBundle() {

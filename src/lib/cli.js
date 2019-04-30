@@ -56,10 +56,15 @@ export default async function startup() {
     const dockerFile = getDocker(program.docker);
 
     // Create Meteor bundle
-    compileBundle();
+    const { workingDir } = compileBundle();
 
     // Set up GCP App Engine instance
-    const appEngine = new AppEngineInstance({ settingsFile, appFile, dockerFile });
+    const appEngine = new AppEngineInstance({
+      settingsFile,
+      appFile,
+      dockerFile,
+      workingDir,
+    });
     appEngine.prepareBundle();
     appEngine.deployBundle();
   } catch (error) {

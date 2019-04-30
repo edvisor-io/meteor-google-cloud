@@ -11,7 +11,7 @@ export default function compileBundle() {
   winston.info('Compiling application bundle');
 
   // Generate Meteor build
-  winston.debug('generate meteor build');
+  winston.debug(`generate meteor build at ${workingDir}`);
   shell.exec(`rm -rf ${workingDir}`);
   shell.exec(`meteor build ${workingDir} --directory --server-only --architecture os.linux.x86_64`);
 
@@ -25,4 +25,6 @@ export default function compileBundle() {
       winston.debug(`deleted symlink at '${symlinkPath}'`);
     }
   });
+
+  return { workingDir };
 }
