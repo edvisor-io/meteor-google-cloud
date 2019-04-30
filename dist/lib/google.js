@@ -67,7 +67,7 @@ function () {
       var app = _jsYaml.default.safeDump(this.appSettings); // We add the Meteor settings now to avoid it being compiled to YAML
 
 
-      app.replace('METEOR_SETTINGS:', `METEOR_SETTINGS: >- \n '${_jsonpack.default.pack(this.meteorSettings || {})}'`);
+      app = app.replace('METEOR_SETTINGS:', `METEOR_SETTINGS: >- \n '${_jsonpack.default.pack(this.meteorSettings || {})}' \n`);
 
       _shelljs.default.exec(`echo '${app}' >${this.workingDir}/bundle/app.yaml`); // Create Dockerfile
 
