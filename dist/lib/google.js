@@ -63,8 +63,8 @@ function () {
       // Create app.yml file
       var app = _jsYaml.default.safeDump(this.appSettings);
 
-      if (!app.env.METEOR_SETTINGS) {
-        Object.assign(app.env, {
+      if (!app.env_variables.METEOR_SETTINGS) {
+        Object.assign(app.env_variables, {
           METEOR_SETTINGS: (0, _jsonpack.default)(this.meteorSettings || {})
         });
       }
