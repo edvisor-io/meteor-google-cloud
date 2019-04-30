@@ -148,7 +148,7 @@ export function getDocker(filePath) {
   // Ensure file exists
   winston.debug('check dockerfile exists');
   try {
-    dockerFile = fs.readFileSync(filePath);
+    dockerFile = fs.readFileSync(filePath, 'utf8');
   } catch (error) {
     throw new Error(`Could not read Dockerfile at '${filePath}'`);
   }
