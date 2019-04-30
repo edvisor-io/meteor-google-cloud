@@ -1,6 +1,6 @@
 {
   "name": "meteor-google-cloud",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "Automate Meteor deployments on Google Cloud App Service Flexible",
   "main": "dist/main.js",
   "bin": {
