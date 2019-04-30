@@ -60,18 +60,14 @@ function () {
     key: "prepareBundle",
     value: function prepareBundle() {
       // If no METEOR_SETTINGS was defined in the app.yaml, we set the one we have
-      if (!this.appSettings.env_variables.METEOR_SETTINGS) {
-        Object.assign(this.appSettings.env_variables, {
-          METEOR_SETTINGS: ''
-        });
-      } // Create app.yaml file
+      Object.assign(this.appSettings.env_variables, {
+        METEOR_SETTINGS: ''
+      }); // Create app.yaml file
+
+      var app = _jsYaml.default.safeDump(this.appSettings); // We add the Meteor settings now to avoid it being compiled to YAML
 
 
-      var app = _jsYaml.default.safeDump(this.appSettings);
-
-      if (!this.appSettings.env_variables.METEOR_SETTINGS) {
-        app.replace('METEOR_SETTINGS:', `METEOR_SETTINGS: >- \n '${_jsonpack.default.pack(this.meteorSettings || {})}'`);
-      }
+      app.replace('METEOR_SETTINGS:', `METEOR_SETTINGS: >- \n '${_jsonpack.default.pack(this.meteorSettings || {})}'`);
 
       _shelljs.default.exec(`echo '${app}' >${this.workingDir}/bundle/app.yaml`); // Create Dockerfile
 
@@ -104,11 +100,9 @@ function () {
               case 0:
                 _winston.default.debug('deploy to App Engine');
 
-                _shelljs.default.exec(`cd ${this.workingDir}/bundle`);
+                _shelljs.default.exec(`cd ${this.workingDir}/bundle && gcloud app deploy -q`);
 
-                _shelljs.default.exec('gcloud app deploy -q');
-
-              case 3:
+              case 2:
               case "end":
                 return _context.stop();
             }
