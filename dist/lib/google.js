@@ -19,8 +19,6 @@ require("regenerator-runtime/runtime");
 
 var _lodash = _interopRequireDefault(require("lodash.omit"));
 
-var _tmp = _interopRequireDefault(require("tmp"));
-
 var _shelljs = _interopRequireDefault(require("shelljs"));
 
 var _winston = _interopRequireDefault(require("winston"));
@@ -64,14 +62,18 @@ function () {
       // If no METEOR_SETTINGS was defined in the app.yaml, we set the one we have
       if (!this.appSettings.env_variables.METEOR_SETTINGS) {
         Object.assign(this.appSettings.env_variables, {
-          METEOR_SETTINGS: _jsonpack.default.pack(this.meteorSettings || {})
+          METEOR_SETTINGS: ''
         });
       } // Create app.yaml file
 
 
       var app = _jsYaml.default.safeDump(this.appSettings);
 
-      _shelljs.default.exec(`echo '${app}' >${this.workingDir}/app.yaml`); // Create Dockerfile
+      if (!this.appSettings.env_variables.METEOR_SETTINGS) {
+        app.replace('METEOR_SETTINGS:', `METEOR_SETTINGS: >- \n '${_jsonpack.default.pack(this.meteorSettings || {})}'`);
+      }
+
+      _shelljs.default.exec(`echo '${app}' >${this.workingDir}/bundle/app.yaml`); // Create Dockerfile
 
 
       var nodeVersion = _shelljs.default.exec('meteor node -v', {
@@ -88,7 +90,7 @@ function () {
 
       var docker = this.dockerFile.replace('{{ nodeVersion }}', nodeVersion).replace('{{ npmVersion }}', npmVersion);
 
-      _shelljs.default.exec(`echo '${docker}' >${this.workingDir}/Dockerfile`);
+      _shelljs.default.exec(`echo '${docker}' >${this.workingDir}/bundle/Dockerfile`);
     }
   }, {
     key: "deployBundle",
@@ -102,7 +104,7 @@ function () {
               case 0:
                 _winston.default.debug('deploy to App Engine');
 
-                _shelljs.default.exec(`cd ${this.workingDir}`);
+                _shelljs.default.exec(`cd ${this.workingDir}/bundle`);
 
                 _shelljs.default.exec('gcloud app deploy -q');
 

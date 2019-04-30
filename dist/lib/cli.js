@@ -19,6 +19,8 @@ var _commander = _interopRequireDefault(require("commander"));
 
 var _shelljs = _interopRequireDefault(require("shelljs"));
 
+var _tmp = _interopRequireDefault(require("tmp"));
+
 var _updateNotifier = _interopRequireDefault(require("update-notifier"));
 
 var _winston = _interopRequireDefault(require("winston"));
@@ -95,6 +97,8 @@ function _startup() {
               appEngine.prepareBundle();
               appEngine.deployBundle();
             } catch (error) {
+              _tmp.default.setGracefulCleanup();
+
               _winston.default.error(error.message);
 
               process.exit(1);
