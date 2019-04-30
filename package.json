@@ -1,6 +1,6 @@
 {
   "name": "meteor-google-cloud",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Automate Meteor deployments on Google Cloud App Service Flexible",
   "main": "dist/main.js",
   "bin": {
@@ -48,7 +48,6 @@
     "delay": "^4.1.0",
     "js-yaml": "^3.13.1",
     "jsesc": "^2.5.2",
-    "json-stringify-pretty-compact": "^2.0.0",
     "jsonfile": "^5.0.0",
     "lodash.defaultto": "^4.14.0",
     "lodash.dropright": "^4.1.1",
