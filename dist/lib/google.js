@@ -23,7 +23,7 @@ var _shelljs = _interopRequireDefault(require("shelljs"));
 
 var _winston = _interopRequireDefault(require("winston"));
 
-var _jsonpack = _interopRequireDefault(require("jsonpack"));
+var _jsonStringifyPrettyCompact = _interopRequireDefault(require("json-stringify-pretty-compact"));
 
 var _jsYaml = _interopRequireDefault(require("js-yaml"));
 
@@ -67,7 +67,8 @@ function () {
       var app = _jsYaml.default.safeDump(this.appSettings); // We add the Meteor settings now to avoid it being compiled to YAML
 
 
-      app = app.replace('METEOR_SETTINGS:', `METEOR_SETTINGS: >- \n '${_jsonpack.default.pack(this.meteorSettings || {})}' \n`);
+      var compactSettings = (0, _jsonStringifyPrettyCompact.default)(this.meteorSettings || {});
+      app = app.replace('METEOR_SETTINGS:', `METEOR_SETTINGS: >- \n ${compactSettings} \n`);
 
       _shelljs.default.exec(`echo '${app}' >${this.workingDir}/bundle/app.yaml`); // Create Dockerfile
 
