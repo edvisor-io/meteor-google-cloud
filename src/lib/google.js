@@ -21,17 +21,15 @@ export default class AppEngineInstance {
 
   prepareBundle() {
     // If no METEOR_SETTINGS was defined in the app.yaml, we set the one we have
-    if (!this.appSettings.env_variables.METEOR_SETTINGS) {
-      Object.assign(this.appSettings.env_variables, {
-        METEOR_SETTINGS: '',
-      });
-    }
+    Object.assign(this.appSettings.env_variables, {
+      METEOR_SETTINGS: '',
+    });
 
     // Create app.yaml file
     const app = yaml.safeDump(this.appSettings);
-    if (!this.appSettings.env_variables.METEOR_SETTINGS) {
-      app.replace('METEOR_SETTINGS:', `METEOR_SETTINGS: >- \n '${jsonpack.pack(this.meteorSettings || {})}'`);
-    }
+
+    // We add the Meteor settings now to avoid it being compiled to YAML
+    app.replace('METEOR_SETTINGS:', `METEOR_SETTINGS: >- \n '${jsonpack.pack(this.meteorSettings || {})}'`);
 
     shell.exec(`echo '${app}' >${this.workingDir}/bundle/app.yaml`);
 
@@ -50,7 +48,6 @@ export default class AppEngineInstance {
 
   async deployBundle() {
     winston.debug('deploy to App Engine');
-    shell.exec(`cd ${this.workingDir}/bundle`);
-    shell.exec('gcloud app deploy -q');
+    shell.exec(`cd ${this.workingDir}/bundle && gcloud app deploy -q`);
   }
 }
