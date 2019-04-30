@@ -93,7 +93,7 @@ export function validateApp(filePath) {
   winston.info(`Validating app.yaml file (${filePath})`);
 
   // Ensure valid json exists
-  winston.debug('check app yml exists');
+  winston.debug('check app yaml exists');
   try {
     appFile = yaml.safeLoad(fs.readFileSync(filePath));
   } catch (error) {
