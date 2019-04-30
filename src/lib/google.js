@@ -16,12 +16,15 @@ export default class AppEngineInstance {
   }
 
   prepareBundle() {
+    // If no METEOR_SETTINGS was defined in the app.yaml, we set the one we have
+    if (!this.appSettings.env_variables.METEOR_SETTINGS) {
+      Object.assign(this.appSettings.env_variables, {
+        METEOR_SETTINGS: jsonpack(this.meteorSettings || {}),
+      });
+    }
+
     // Create app.yml file
     const app = yaml.safeDump(this.appSettings);
-
-    if (!app.env_variables.METEOR_SETTINGS) {
-      Object.assign(app.env_variables, { METEOR_SETTINGS: jsonpack(this.meteorSettings || {}) });
-    }
     shell.exec(`echo '${app}' >${this.workingDir}/app.yml`);
 
     // Create Dockerfile
