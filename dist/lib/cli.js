@@ -42,7 +42,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   pkg: _package.default
 }).notify(); // Configure CLI
 
-_commander.default.description(_package.default.description).version(`v${_package.default.version}`, '-v, --version').option('-s, --settings <path>', 'path to settings file (settings.json)', '../../examples/settings.json').option('-c, --app <path>', 'path to app.yml config file', '../../examples/app.yml').option('-d, --docker <path>', 'path to Dockerfile fle', '../../examples/Dockerfile.yml').option('-t, --test', 'enable debug mode').option('-q, --quiet', 'enable quite mode').parse(process.argv); // Pretty print logs
+_commander.default.description(_package.default.description).version(`v${_package.default.version}`, '-v, --version').option('-s, --settings <path>', 'path to settings file (settings.json)', '../examples/settings.json').option('-c, --app <path>', 'path to app.yml config file').option('-d, --docker <path>', 'path to Dockerfile fle', '../examples/Dockerfile.yml').option('-v, --verbose', 'enable verbose mode').option('-q, --quiet', 'enable quite mode').parse(process.argv); // Pretty print logs
 
 
 _winston.default.cli(); // Terminate on shelljs errors
@@ -56,7 +56,7 @@ if (_commander.default.quiet === true) {
 } // Toggle Debug mode based on user preference
 
 
-if (_commander.default.test === true) {
+if (_commander.default.verbose === true) {
   _winston.default.level = 'debug';
 }
 
