@@ -4,7 +4,7 @@ import omit from 'lodash.omit';
 import tmp from 'tmp';
 import shell from 'shelljs';
 import winston from 'winston';
-import jsonpack from 'jsonpack/main';
+import jsonpack from 'jsonpack';
 import yaml from 'js-yaml';
 
 export default class AppEngineInstance {
@@ -19,7 +19,7 @@ export default class AppEngineInstance {
     // If no METEOR_SETTINGS was defined in the app.yaml, we set the one we have
     if (!this.appSettings.env_variables.METEOR_SETTINGS) {
       Object.assign(this.appSettings.env_variables, {
-        METEOR_SETTINGS: jsonpack(this.meteorSettings || {}),
+        METEOR_SETTINGS: jsonpack.pack(this.meteorSettings || {}),
       });
     }
 
