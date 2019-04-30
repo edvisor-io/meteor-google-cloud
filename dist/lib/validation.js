@@ -141,8 +141,7 @@ function validateApp(filePath) {
     }),
     env_variables: _joi.default.object({
       ROOT_URL: _joi.default.string(),
-      MONGO_URL: _joi.default.string(),
-      MAIL_URL: _joi.default.string()
+      MONGO_URL: _joi.default.string()
     }).unknown(true)
   }).unknown(true); // allow unknown keys (at the top level) for extra settings
   // (https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions)

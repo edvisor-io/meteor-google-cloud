@@ -25,7 +25,7 @@ var _shelljs = _interopRequireDefault(require("shelljs"));
 
 var _winston = _interopRequireDefault(require("winston"));
 
-var _jsonpack = _interopRequireDefault(require("jsonpack"));
+var _main = _interopRequireDefault(require("jsonpack/main"));
 
 var _jsYaml = _interopRequireDefault(require("js-yaml"));
 
@@ -63,7 +63,7 @@ function () {
       // If no METEOR_SETTINGS was defined in the app.yaml, we set the one we have
       if (!this.appSettings.env_variables.METEOR_SETTINGS) {
         Object.assign(this.appSettings.env_variables, {
-          METEOR_SETTINGS: (0, _jsonpack.default)(this.meteorSettings || {})
+          METEOR_SETTINGS: (0, _main.default)(this.meteorSettings || {})
         });
       } // Create app.yml file
 
