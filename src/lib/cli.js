@@ -5,7 +5,9 @@ import shell from 'shelljs';
 import updateNotifier from 'update-notifier';
 import winston from 'winston';
 import pkg from '../../package.json';
-import { validateGCloud, validateSettings, validateMeteor } from './validation';
+import {
+  validateGCloud, validateSettings, validateMeteor, validateApp, getDocker,
+} from './validation';
 import compileBundle from './bundle';
 import AppEngineInstance from './google';
 
@@ -50,8 +52,8 @@ export default async function startup() {
 
     // Validate settings file(s)
     const settingsFile = validateSettings(program.settings);
-    const appFile = validateSettings(program.app);
-    const dockerFile = validateSettings(program.docker);
+    const appFile = validateApp(program.app);
+    const dockerFile = getDocker(program.docker);
 
     // Create Meteor bundle
     compileBundle();
