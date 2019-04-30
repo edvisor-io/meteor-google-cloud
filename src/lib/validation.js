@@ -114,7 +114,6 @@ export function validateApp(filePath) {
     env_variables: Joi.object({
       ROOT_URL: Joi.string(),
       MONGO_URL: Joi.string(),
-      MAIL_URL: Joi.string(),
     }).unknown(true),
   }).unknown(true);
   // allow unknown keys (at the top level) for extra settings
