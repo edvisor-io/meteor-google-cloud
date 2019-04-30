@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
-require("core-js/modules/es.string.replace");
+require('core-js/modules/es.string.replace');
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
+Object.defineProperty(exports, '__esModule', {
+  value: true,
 });
 exports.validateGCloud = validateGCloud;
 exports.validateMeteor = validateMeteor;
@@ -11,21 +11,21 @@ exports.validateSettings = validateSettings;
 exports.validateApp = validateApp;
 exports.getDocker = getDocker;
 
-var _fs = _interopRequireDefault(require("fs"));
+let _fs = _interopRequireDefault(require('fs'));
 
-var _jsonfile = _interopRequireDefault(require("jsonfile"));
+let _jsonfile = _interopRequireDefault(require('jsonfile'));
 
-var _jsYaml = _interopRequireDefault(require("js-yaml"));
+let _jsYaml = _interopRequireDefault(require('js-yaml'));
 
-var _winston = _interopRequireDefault(require("winston"));
+let _winston = _interopRequireDefault(require('winston'));
 
-var _lodash = _interopRequireDefault(require("lodash.nth"));
+let _lodash = _interopRequireDefault(require('lodash.nth'));
 
-var _lodash2 = _interopRequireDefault(require("lodash.dropright"));
+let _lodash2 = _interopRequireDefault(require('lodash.dropright'));
 
-var _joi = _interopRequireDefault(require("@hapi/joi"));
+let _joi = _interopRequireDefault(require('@hapi/joi'));
 
-var _commandExists = _interopRequireDefault(require("command-exists"));
+let _commandExists = _interopRequireDefault(require('command-exists'));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -40,7 +40,7 @@ function validateGCloud() {
 }
 
 function validateMeteor() {
-  var release; // Ensure Meteor CLI is installed
+  let release; // Ensure Meteor CLI is installed
 
   _winston.default.debug('check Meteor is installed');
 
@@ -58,9 +58,9 @@ function validateMeteor() {
   } // Determine major/minor version numbers by stripping non-numeric characters from release
 
 
-  var versionNumbers = release.replace(/[^0-9]/g, '');
-  var majorVersion = Number.parseInt(versionNumbers.charAt(0), 10);
-  var minorVersion = Number.parseInt(versionNumbers.charAt(1), 10); // Ensure current Meteor release is >= 1.4
+  let versionNumbers = release.replace(/[^0-9]/g, '');
+  let majorVersion = Number.parseInt(versionNumbers.charAt(0), 10);
+  let minorVersion = Number.parseInt(versionNumbers.charAt(1), 10); // Ensure current Meteor release is >= 1.4
 
   _winston.default.debug('check current Meteor release >= 1.4');
 
@@ -70,7 +70,7 @@ function validateMeteor() {
 }
 
 function validateSettings(filePath) {
-  var settingsFile;
+  let settingsFile;
 
   _winston.default.info(`Validating settings file (${filePath})`); // Ensure valid json exists
 
@@ -84,18 +84,18 @@ function validateSettings(filePath) {
   } // Define schema
 
 
-  var meteorGoogleCloudConfig = _joi.default.object({});
+  let meteorGoogleCloudConfig = _joi.default.object({});
 
-  var schema = _joi.default.object({
-    'meteor-google-cloud': meteorGoogleCloudConfig
+  let schema = _joi.default.object({
+    'meteor-google-cloud': meteorGoogleCloudConfig,
   }).unknown(true); // Ensure settings data follows schema
 
 
   _winston.default.debug('check data follows schema');
 
   _joi.default.validate(settingsFile, schema, {
-    presence: 'required'
-  }, function (error) {
+    presence: 'required',
+  }, (error) => {
     if (error) {
       // Pull error from bottom of stack to get most specific/useful details
       var lastError = (0, _lodash.default)(error.details, -1); // Locate parent of non-compliant field, or otherwise mark as top level
@@ -115,7 +115,7 @@ function validateSettings(filePath) {
 }
 
 function validateApp(filePath) {
-  var appFile;
+  let appFile;
 
   _winston.default.info(`Validating app.yml file (${filePath})`); // Ensure valid json exists
 
@@ -129,21 +129,20 @@ function validateApp(filePath) {
   } // Define schema
 
 
-  var schema = _joi.default.object({
+  let schema = _joi.default.object({
     runtime: _joi.default.string(),
     env: _joi.default.string(),
     threadsafe: _joi.default.boolean(),
     automatic_scaling: _joi.default.object({
-      max_num_instances: _joi.default.number().min(1)
+      max_num_instances: _joi.default.number().min(1),
     }).optional().unknown(true),
     network: _joi.default.object({
-      session_affinity: _joi.default.boolean()
+      session_affinity: _joi.default.boolean(),
     }),
     env_variables: _joi.default.object({
       ROOT_URL: _joi.default.string(),
       MONGO_URL: _joi.default.string(),
-      MAIL_URL: _joi.default.string()
-    }).unknown(true)
+    }).unknown(true),
   }).unknown(true); // allow unknown keys (at the top level) for extra settings
   // (https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions)
   // Ensure settings data follows schema
@@ -152,8 +151,8 @@ function validateApp(filePath) {
   _winston.default.debug('check data follows schema');
 
   _joi.default.validate(appFile, schema, {
-    presence: 'required'
-  }, function (error) {
+    presence: 'required',
+  }, (error) => {
     if (error) {
       // Pull error from bottom of stack to get most specific/useful details
       var lastError = (0, _lodash.default)(error.details, -1); // Locate parent of non-compliant field, or otherwise mark as top level
@@ -173,7 +172,7 @@ function validateApp(filePath) {
 }
 
 function getDocker(filePath) {
-  var dockerFile;
+  let dockerFile;
 
   _winston.default.info(`Reading Dockerfile (${filePath})`); // Ensure file exists
 
