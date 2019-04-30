@@ -3,7 +3,7 @@
 import omit from 'lodash.omit';
 import shell from 'shelljs';
 import winston from 'winston';
-import jsonpack from 'jsonpack';
+import jsonStringifyPrettyCompact from 'json-stringify-pretty-compact';
 import yaml from 'js-yaml';
 
 export default class AppEngineInstance {
@@ -29,7 +29,8 @@ export default class AppEngineInstance {
     let app = yaml.safeDump(this.appSettings);
 
     // We add the Meteor settings now to avoid it being compiled to YAML
-    app = app.replace('METEOR_SETTINGS:', `METEOR_SETTINGS: >- \n '${jsonpack.pack(this.meteorSettings || {})}' \n`);
+    const compactSettings = jsonStringifyPrettyCompact(this.meteorSettings || {});
+    app = app.replace('METEOR_SETTINGS:', `METEOR_SETTINGS: >- \n ${compactSettings} \n`);
 
     shell.exec(`echo '${app}' >${this.workingDir}/bundle/app.yaml`);
 
