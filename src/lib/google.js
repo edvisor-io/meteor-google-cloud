@@ -4,7 +4,7 @@ import omit from 'lodash.omit';
 import tmp from 'tmp';
 import shell from 'shelljs';
 import winston from 'winston';
-import jsonpack from 'jsonpack';
+import jsonpack from 'jsonpack/main';
 import yaml from 'js-yaml';
 
 export default class AppEngineInstance {
