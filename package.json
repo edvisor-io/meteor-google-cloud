@@ -1,0 +1,66 @@
+{
+  "name": "meteor-google-cloud",
+  "version": "0.0.1",
+  "description": "Automate Meteor deployments on Google Cloud App Service Flexible",
+  "main": "distribution/main.js",
+  "bin": {
+    "meteor-google-cloud": "./distribution/bin/meteor-google-cloud.js"
+  },
+  "watch": {
+    "build": "src"
+  },
+  "scripts": {
+    "build": "babel source --out-dir distribution",
+    "dev": "npm-watch build",
+    "lint": "eslint source"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EducationLink/meteor-google-cloud.git"
+  },
+  "keywords": [
+    "meteor",
+    "deployment",
+    "hosting",
+    "google",
+    "gcp",
+    "app-engine"
+  ],
+  "author": "Raphael Arias <raphael.arias@geteducation.link>",
+  "license": "MIT",
+  "bugs": "https://github.com/EducationLink/meteor-google-cloud/issues",
+  "homepage": "https://github.com/EducationLink/meteor-google-cloud",
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.4.0",
+    "@babel/preset-env": "^7.4.2",
+    "eslint": "^5.15.3",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "npm-watch": "^0.6.0"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "command-exists": "^1.2.8",
+    "commander": "^2.19.0",
+    "core-js": "^3.0.0",
+    "delay": "^4.1.0",
+    "joi": "^14.3.1",
+    "jsesc": "^2.5.2",
+    "jsonfile": "^5.0.0",
+    "lodash.defaultto": "^4.14.0",
+    "lodash.dropright": "^4.1.1",
+    "lodash.nth": "^4.11.2",
+    "lodash.omit": "^4.5.0",
+    "p-iteration": "^1.1.8",
+    "regenerator-runtime": "^0.13.2",
+    "shelljs": "^0.8.3",
+    "tar": "^4.4.8",
+    "tmp": "^0.1.0",
+    "update-notifier": "^2.1.0",
+    "winston": "^2.4.4"
+  },
+  "engines": {
+    "node": ">=4"
+  }
+}
