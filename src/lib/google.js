@@ -19,8 +19,8 @@ export default class AppEngineInstance {
     // Create app.yml file
     const app = yaml.safeDump(this.appSettings);
 
-    if (!app.env.METEOR_SETTINGS) {
-      Object.assign(app.env, { METEOR_SETTINGS: jsonpack(this.meteorSettings || {}) });
+    if (!app.env_variables.METEOR_SETTINGS) {
+      Object.assign(app.env_variables, { METEOR_SETTINGS: jsonpack(this.meteorSettings || {}) });
     }
     shell.exec(`echo '${app}' >${this.workingDir}/app.yml`);
 
