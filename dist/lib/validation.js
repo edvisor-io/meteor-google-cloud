@@ -117,15 +117,15 @@ function validateSettings(filePath) {
 function validateApp(filePath) {
   var appFile;
 
-  _winston.default.info(`Validating app.yml file (${filePath})`); // Ensure valid json exists
+  _winston.default.info(`Validating app.yaml file (${filePath})`); // Ensure valid json exists
 
 
-  _winston.default.debug('check app yml exists');
+  _winston.default.debug('check app yaml exists');
 
   try {
     appFile = _jsYaml.default.safeLoad(_fs.default.readFileSync(filePath));
   } catch (error) {
-    throw new Error(`Could not read app.yml file at '${filePath}'`);
+    throw new Error(`Could not read app.yaml file at '${filePath}'`);
   } // Define schema
 
 
@@ -164,7 +164,7 @@ function validateApp(filePath) {
       } // Report user-friendly error with relevant complaint/context to errors
 
 
-      throw new Error(`App.yml file (${filePath}): ${lastError.message} in ${pathToParent}`);
+      throw new Error(`App.yaml file (${filePath}): ${lastError.message} in ${pathToParent}`);
     }
   });
 
@@ -180,7 +180,7 @@ function getDocker(filePath) {
   _winston.default.debug('check dockerfile exists');
 
   try {
-    dockerFile = _fs.default.readFileSync(filePath);
+    dockerFile = _fs.default.readFileSync(filePath, 'utf8');
   } catch (error) {
     throw new Error(`Could not read Dockerfile at '${filePath}'`);
   }

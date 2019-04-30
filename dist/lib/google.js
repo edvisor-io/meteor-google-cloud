@@ -65,12 +65,12 @@ function () {
         Object.assign(this.appSettings.env_variables, {
           METEOR_SETTINGS: _jsonpack.default.pack(this.meteorSettings || {})
         });
-      } // Create app.yml file
+      } // Create app.yaml file
 
 
       var app = _jsYaml.default.safeDump(this.appSettings);
 
-      _shelljs.default.exec(`echo '${app}' >${this.workingDir}/app.yml`); // Create Dockerfile
+      _shelljs.default.exec(`echo '${app}' >${this.workingDir}/app.yaml`); // Create Dockerfile
 
 
       var nodeVersion = _shelljs.default.exec('meteor node -v', {
