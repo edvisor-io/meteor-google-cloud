@@ -2,10 +2,11 @@
 
 import fs from 'fs';
 import jsonfile from 'jsonfile';
+import yaml from 'js-yaml';
 import winston from 'winston';
 import nth from 'lodash.nth';
 import dropRight from 'lodash.dropright';
-import Joi from 'joi';
+import Joi from '@hapi/joi';
 import commandExists from 'command-exists';
 
 export function validateGCloud() {
@@ -60,27 +61,10 @@ export function validateSettings(filePath) {
   }
 
   // Define schema
-  const siteConfig = Joi.object({
-    siteName: Joi.string(),
-    resourceGroup: Joi.string(),
-    tenantId: Joi.string(),
-    subscriptionId: Joi.string(),
-    deploymentCreds: Joi.object({ username: Joi.string(), password: Joi.string() }),
-    envVariables: Joi.object({ ROOT_URL: Joi.string(), MONGO_URL: Joi.string() }).unknown(true),
-    slotName: Joi.string().optional(),
-    customServerInitRepo: Joi.string().optional(),
-    servicePrincipal: Joi.object({ appId: Joi.string(), secret: Joi.string() }).optional(),
-  });
+  const meteorGoogleCloudConfig = Joi.object({});
   const schema = Joi.object({
-    // Accepts config as an object
-    'meteor-google-cloud': Joi.alternatives([
-      siteConfig,
-      Joi.array()
-        .items(siteConfig)
-        // Reject duplicated site
-        .unique((a, b) => (a.siteName === b.siteName) && (a.slotName === b.slotName)),
-    ]),
-  }).unknown(true); // allow unknown keys (at the top level) for Meteor settings
+    'meteor-google-cloud': meteorGoogleCloudConfig,
+  }).unknown(true);
 
   // Ensure settings data follows schema
   winston.debug('check data follows schema');
@@ -101,4 +85,74 @@ export function validateSettings(filePath) {
   });
 
   return settingsFile;
+}
+
+export function validateApp(filePath) {
+  let appFile;
+
+  winston.info(`Validating app.yml file (${filePath})`);
+
+  // Ensure valid json exists
+  winston.debug('check app yml exists');
+  try {
+    appFile = yaml.safeLoad(fs.readFileSync(filePath));
+  } catch (error) {
+    throw new Error(`Could not read app.yml file at '${filePath}'`);
+  }
+
+  // Define schema
+  const schema = Joi.object({
+    runtime: Joi.string(),
+    env: Joi.string(),
+    threadsafe: Joi.boolean(),
+    automatic_scaling: Joi.object({
+      max_num_instances: Joi.number().min(1),
+    }).optional().unknown(true),
+    network: Joi.object({
+      session_affinity: Joi.boolean(),
+    }),
+    env_variables: Joi.object({
+      ROOT_URL: Joi.string(),
+      MONGO_URL: Joi.string(),
+      MAIL_URL: Joi.string(),
+    }).unknown(true),
+  }).unknown(true);
+  // allow unknown keys (at the top level) for extra settings
+  // (https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions)
+
+  // Ensure settings data follows schema
+  winston.debug('check data follows schema');
+  Joi.validate(appFile, schema, { presence: 'required' }, (error) => {
+    if (error) {
+      // Pull error from bottom of stack to get most specific/useful details
+      const lastError = nth(error.details, -1);
+
+      // Locate parent of non-compliant field, or otherwise mark as top level
+      let pathToParent = 'top level';
+      if (lastError.path.length > 1) {
+        pathToParent = `"${dropRight(lastError.path).join('.')}"`;
+      }
+
+      // Report user-friendly error with relevant complaint/context to errors
+      throw new Error(`App.yml file (${filePath}): ${lastError.message} in ${pathToParent}`);
+    }
+  });
+
+  return appFile;
+}
+
+export function getDocker(filePath) {
+  let dockerFile;
+
+  winston.info(`Reading Dockerfile (${filePath})`);
+
+  // Ensure file exists
+  winston.debug('check dockerfile exists');
+  try {
+    dockerFile = fs.readFileSync(filePath);
+  } catch (error) {
+    throw new Error(`Could not read Dockerfile at '${filePath}'`);
+  }
+
+  return dockerFile;
 }
