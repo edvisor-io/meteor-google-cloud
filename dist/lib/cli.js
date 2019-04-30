@@ -80,8 +80,8 @@ function _startup() {
               (0, _validation.validateMeteor)(); // Validate settings file(s)
 
               settingsFile = (0, _validation.validateSettings)(_commander.default.settings);
-              appFile = (0, _validation.validateSettings)(_commander.default.app);
-              dockerFile = (0, _validation.validateSettings)(_commander.default.docker); // Create Meteor bundle
+              appFile = (0, _validation.validateApp)(_commander.default.app);
+              dockerFile = (0, _validation.getDocker)(_commander.default.docker); // Create Meteor bundle
 
               (0, _bundle.default)(); // Set up GCP App Engine instance
 
