@@ -1,5 +1,7 @@
 {
   "public": {},
   "private": {},
-  "meteor-google-cloud": {}
+  "meteor-google-cloud": {
+    "project": ""
+  }
 }
