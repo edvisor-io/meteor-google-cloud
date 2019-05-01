@@ -1,4 +1,5 @@
 runtime: custom
+service: my-service-name
 env: flex
 threadsafe: true
 zones:
