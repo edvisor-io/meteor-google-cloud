@@ -20,6 +20,13 @@ Critical, backwards compatible updates are automatically applied to the underlyi
 
 For more information, check: [App Engine Flexible Environment's page](https://cloud.google.com/appengine/docs/flexible/).
 
+## Pricing
+
+Because we run Meteor on the Flexible environment you may not be able to use the free tier of App Engine Standard. For the first year you may have $300 in credit per month, but be aware of the costs:
+
+- [Pricing calculator.](https://cloud.google.com/products/calculator/#id=126a7009-debc-49e7-8e36-f7d5574ecfc1)
+- [More info on App Engine billing.](https://stackoverflow.com/questions/47125661/pricing-of-google-app-engine-flexible-env-a-500-lesson)
+
 ## Installation
 
 ```bash
@@ -67,16 +74,44 @@ meteor-google-cloud --settings .deploy/config.json --app .deploy/app.yaml --dock
 
 P.S: It may take a few minutes to build your app, which may appear to be unresponsive, but it's not, just wait.
 
+## CLI options
+
+The Meteor Google Cloud CLI supports the following options:
+
+```bash
+  -v, --version          output the version number
+  -i, --init             init necessary files on your repo
+  -s, --settings <path>  path to settings file (settings.json)
+  -c, --app <path>       path to app.yaml config file
+  -d, --docker <path>    path to Dockerfile file 
+  -v, --verbose          enable verbose mode
+  -q, --quiet            enable quite mode
+  -h, --help             output usage information
+```
+
 ## FAQ
 **1. Does App Engine supports websockets?**
 Yes, announced in February 5, 2019, [more info](https://cloud.google.com/blog/products/application-development/introducing-websockets-support-for-app-engine-flexible-environment).
 
 **2. Does App Engine supports session affinity?** Yes.
 
+**3. Do I get auto scaling?** Yes.
+
+**4. Do I get auto healing?** Yes.
+
 ## Support
 
 We welcome any questions, contributions or bug reports in the GitHub [issue tracker](https://github.com/EducationLink/meteor-google-cloud/issues).
 
+## Ideas
+
+- [ ] Add support for cron, queue, dos, etc.
+- [ ] Use Google Deployment Manager (when fully supported)
+- [ ] Support multiple service deployment (?)
+- [ ] Set up CI
+
 ## License
 
 [MIT](https://github.com/EducationLink/meteor-google-cloud/blob/master/LICENSE)
+
+This package was heavily inspired on `meteor-azure`, a deployment packge for Meteor applicatons on Microsoft Azure, [click here](https://github.com/fractal-code/meteor-azure) for more information.
