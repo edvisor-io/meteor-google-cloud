@@ -114,7 +114,7 @@ export function validateApp(filePath) {
     resources: Joi.object({
       cpu: Joi.number().min(1),
       memory_gb: Joi.number(),
-      disk_size_gb: Joi.number(),
+      disk_size_gb: Joi.number().min(10),
     }).optional().unknown(true),
     network: Joi.object({
       session_affinity: Joi.boolean(),
