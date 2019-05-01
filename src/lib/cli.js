@@ -11,6 +11,7 @@ import {
 } from './validation';
 import compileBundle from './bundle';
 import AppEngineInstance from './google';
+import { initRepo } from './helpers';
 
 // Notify user of available updates
 updateNotifier({ pkg }).notify();
@@ -19,6 +20,7 @@ updateNotifier({ pkg }).notify();
 program
   .description(pkg.description)
   .version(`v${pkg.version}`, '-v, --version')
+  .option('-i, --init', 'init necessary files on your repo')
   .option('-s, --settings <path>', 'path to settings file (settings.json)', '../examples/settings.json')
   .option('-c, --app <path>', 'path to app.yaml config file')
   .option('-d, --docker <path>', 'path to Dockerfile fle', '../examples/Dockerfile')
@@ -45,6 +47,14 @@ if (program.verbose === true) {
 
 export default async function startup() {
   try {
+    // If it's init, we will stop here
+    if (program.init === true) {
+      initRepo();
+
+      process.exit(0);
+      return;
+    }
+
     // Validate if gcloud is installed
     validateGCloud();
 
@@ -68,6 +78,8 @@ export default async function startup() {
     });
     appEngine.prepareBundle();
     appEngine.deployBundle();
+
+    process.exit(0);
   } catch (error) {
     tmp.setGracefulCleanup();
 
