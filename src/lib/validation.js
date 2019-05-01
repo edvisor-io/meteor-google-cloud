@@ -61,7 +61,9 @@ export function validateSettings(filePath) {
   }
 
   // Define schema
-  const meteorGoogleCloudConfig = Joi.object({});
+  const meteorGoogleCloudConfig = Joi.object({
+    project: Joi.string(),
+  }).unknown(true);
   const schema = Joi.object({
     'meteor-google-cloud': meteorGoogleCloudConfig,
   }).unknown(true);
