@@ -92,14 +92,14 @@ export function validateSettings(filePath) {
 export function validateApp(filePath) {
   let appFile;
 
-  winston.info(`Validating app.yaml file (${filePath})`);
+  winston.info(`Validating app.yml file (${filePath})`);
 
   // Ensure valid json exists
   winston.debug('check app yaml exists');
   try {
     appFile = yaml.safeLoad(fs.readFileSync(filePath));
   } catch (error) {
-    throw new Error(`Could not read app.yaml file at '${filePath}'`);
+    throw new Error(`Could not read app.yml file at '${filePath}'`);
   }
 
   // Define schema

@@ -121,7 +121,7 @@ function validateSettings(filePath) {
 function validateApp(filePath) {
   var appFile;
 
-  _winston.default.info(`Validating app.yaml file (${filePath})`); // Ensure valid json exists
+  _winston.default.info(`Validating app.yml file (${filePath})`); // Ensure valid json exists
 
 
   _winston.default.debug('check app yaml exists');
@@ -129,7 +129,7 @@ function validateApp(filePath) {
   try {
     appFile = _jsYaml.default.safeLoad(_fs.default.readFileSync(filePath));
   } catch (error) {
-    throw new Error(`Could not read app.yaml file at '${filePath}'`);
+    throw new Error(`Could not read app.yml file at '${filePath}'`);
   } // Define schema
 
 
