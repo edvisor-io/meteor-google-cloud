@@ -52,6 +52,11 @@ export default class AppEngineInstance {
 
   async deployBundle() {
     winston.debug('deploy to App Engine');
-    shell.exec(`cd ${this.workingDir}/bundle && gcloud app deploy -q`);
+
+    const settings = this.meteorSettings['meteor-google-cloud'];
+    const flags = Object.keys(settings).map(key => `${key}=${settings[key]}`).join(' ');
+
+    winston.debug(`set flags for deploy: ${flags}`);
+    shell.exec(`cd ${this.workingDir}/bundle && gcloud app deploy -q ${flags}`);
   }
 }
