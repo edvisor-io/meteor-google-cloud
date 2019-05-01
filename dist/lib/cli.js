@@ -33,6 +33,8 @@ var _bundle = _interopRequireDefault(require("./bundle"));
 
 var _google = _interopRequireDefault(require("./google"));
 
+var _helpers = require("./helpers");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -44,7 +46,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   pkg: _package.default
 }).notify(); // Configure CLI
 
-_commander.default.description(_package.default.description).version(`v${_package.default.version}`, '-v, --version').option('-s, --settings <path>', 'path to settings file (settings.json)', '../examples/settings.json').option('-c, --app <path>', 'path to app.yaml config file').option('-d, --docker <path>', 'path to Dockerfile fle', '../examples/Dockerfile').option('-v, --verbose', 'enable verbose mode').option('-q, --quiet', 'enable quite mode').parse(process.argv); // Pretty print logs
+_commander.default.description(_package.default.description).version(`v${_package.default.version}`, '-v, --version').option('-i, --init', 'init necessary files on your repo').option('-s, --settings <path>', 'path to settings file (settings.json)', '../examples/settings.json').option('-c, --app <path>', 'path to app.yaml config file').option('-d, --docker <path>', 'path to Dockerfile fle', '../examples/Dockerfile').option('-v, --verbose', 'enable verbose mode').option('-q, --quiet', 'enable quite mode').parse(process.argv); // Pretty print logs
 
 
 _winston.default.cli(); // Terminate on shelljs errors
@@ -76,40 +78,57 @@ function _startup() {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            try {
-              // Validate if gcloud is installed
-              (0, _validation.validateGCloud)(); // Validate Meteor version/packages
+            _context.prev = 0;
 
-              (0, _validation.validateMeteor)(); // Validate settings file(s)
-
-              settingsFile = (0, _validation.validateSettings)(_commander.default.settings);
-              appFile = (0, _validation.validateApp)(_commander.default.app);
-              dockerFile = (0, _validation.getDocker)(_commander.default.docker); // Create Meteor bundle
-
-              _compileBundle = (0, _bundle.default)(), workingDir = _compileBundle.workingDir; // Set up GCP App Engine instance
-
-              appEngine = new _google.default({
-                settingsFile,
-                appFile,
-                dockerFile,
-                workingDir
-              });
-              appEngine.prepareBundle();
-              appEngine.deployBundle();
-            } catch (error) {
-              _tmp.default.setGracefulCleanup();
-
-              _winston.default.error(error.message);
-
-              process.exit(1);
+            if (!(_commander.default.init === true)) {
+              _context.next = 5;
+              break;
             }
 
-          case 1:
+            (0, _helpers.initRepo)();
+            process.exit(0);
+            return _context.abrupt("return");
+
+          case 5:
+            // Validate if gcloud is installed
+            (0, _validation.validateGCloud)(); // Validate Meteor version/packages
+
+            (0, _validation.validateMeteor)(); // Validate settings file(s)
+
+            settingsFile = (0, _validation.validateSettings)(_commander.default.settings);
+            appFile = (0, _validation.validateApp)(_commander.default.app);
+            dockerFile = (0, _validation.getDocker)(_commander.default.docker); // Create Meteor bundle
+
+            _compileBundle = (0, _bundle.default)(), workingDir = _compileBundle.workingDir; // Set up GCP App Engine instance
+
+            appEngine = new _google.default({
+              settingsFile,
+              appFile,
+              dockerFile,
+              workingDir
+            });
+            appEngine.prepareBundle();
+            appEngine.deployBundle();
+            process.exit(0);
+            _context.next = 22;
+            break;
+
+          case 17:
+            _context.prev = 17;
+            _context.t0 = _context["catch"](0);
+
+            _tmp.default.setGracefulCleanup();
+
+            _winston.default.error(_context.t0.message);
+
+            process.exit(1);
+
+          case 22:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee);
+    }, _callee, null, [[0, 17]]);
   }));
   return _startup.apply(this, arguments);
 }

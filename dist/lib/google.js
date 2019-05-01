@@ -57,21 +57,20 @@ function () {
   _createClass(AppEngineInstance, [{
     key: "prepareBundle",
     value: function prepareBundle() {
-      // If no METEOR_SETTINGS was defined in the app.yaml, we set the one we have
-      Object.assign(this.appSettings.env_variables, {
-        METEOR_SETTINGS: ''
-      }); // Create app.yaml file
-
-      var app = _jsYaml.default.safeDump(this.appSettings); // We add the Meteor settings now to avoid it being compiled to YAML
-
-
+      // We add the Meteor settings now to avoid it being compiled to YAML
       var compactSettings = JSON.stringify(this.meteorSettings || {}, null, 0) // It will remove all non-printable characters.
       // This are all characters NOT within the ASCII HEX space 0x20-0x7E.
-      .replace(/[^\x20-\x7E]/gmi, '').replace(/[\n\r]+/g, '');
-      app = app.replace('METEOR_SETTINGS:', `METEOR_SETTINGS: '${compactSettings}' \n`);
+      .replace(/[^\x20-\x7E]/gmi, '').replace(/[\n\r]+/g, ''); // We will use shell sed command to replace the variables
 
-      _shelljs.default.exec(`echo '${app}' >${this.workingDir}/bundle/app.yaml`); // Create Dockerfile
+      Object.assign(this.appSettings.env_variables, {
+        METEOR_SETTINGS: '{{ METEOR_SETTINGS }}'
+      }); // Create app.yaml file
 
+      var app = _jsYaml.default.safeDump(this.appSettings);
+
+      _shelljs.default.exec(`echo '${app}' >${this.workingDir}/bundle/app.yaml`);
+
+      _shelljs.default.sed('-i', '{{ METEOR_SETTINGS }}', `'${compactSettings}'`, `${this.workingDir}/bundle/app.yaml`);
 
       var nodeVersion = _shelljs.default.exec('meteor node -v', {
         silent: true
@@ -83,7 +82,8 @@ function () {
 
       _winston.default.debug(`set Node to ${nodeVersion}`);
 
-      _winston.default.debug(`set NPM to ${npmVersion}`);
+      _winston.default.debug(`set NPM to ${npmVersion}`); // Create Dockerfile
+
 
       var docker = this.dockerFile.replace('{{ nodeVersion }}', nodeVersion).replace('{{ npmVersion }}', npmVersion);
 
