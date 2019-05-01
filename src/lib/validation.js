@@ -139,6 +139,15 @@ export function validateApp(filePath) {
     }
   });
 
+  // Make sure threadsafe is always true otherwise Meteor will not work properly
+  if (!appFile.threadsafe) {
+    winston.debug('found threadsafe false, change threadsafe to true');
+
+    Object.assign(appFile, {
+      threadsafe: true,
+    });
+  }
+
   return appFile;
 }
 
