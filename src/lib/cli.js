@@ -21,9 +21,9 @@ program
   .description(pkg.description)
   .version(`v${pkg.version}`, '-v, --version')
   .option('-i, --init', 'init necessary files on your repo')
-  .option('-s, --settings <path>', 'path to settings file (settings.json)', '../examples/settings.json')
+  .option('-s, --settings <path>', 'path to settings file (settings.json)')
   .option('-c, --app <path>', 'path to app.yaml config file')
-  .option('-d, --docker <path>', 'path to Dockerfile fle', '../examples/Dockerfile')
+  .option('-d, --docker <path>', 'path to Dockerfile file')
   .option('-v, --verbose', 'enable verbose mode')
   .option('-q, --quiet', 'enable quite mode')
   .parse(process.argv);

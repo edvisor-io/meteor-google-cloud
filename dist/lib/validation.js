@@ -144,7 +144,7 @@ function validateApp(filePath) {
     resources: _joi.default.object({
       cpu: _joi.default.number().min(1),
       memory_gb: _joi.default.number(),
-      disk_size_gb: _joi.default.number()
+      disk_size_gb: _joi.default.number().min(10)
     }).optional().unknown(true),
     network: _joi.default.object({
       session_affinity: _joi.default.boolean()
