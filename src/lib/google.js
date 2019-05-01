@@ -56,7 +56,16 @@ export default class AppEngineInstance {
 
     // Allow users to pass any option to gcloud app deploy
     const settings = this.googleCloudSettings;
-    const flags = Object.keys(settings).map(key => `--${key}=${settings[key]}`).join(' ');
+    const flags = Object.keys(settings).map((key) => {
+      const value = settings[key];
+
+      // Only some flags actually require a value (e.g. stop-previous-version)
+      if (value) {
+        return `--${key}=${settings[key]}`;
+      }
+
+      return `--${key}`;
+    }).join(' ');
 
     winston.debug(`set flags for deploy: ${flags}`);
     shell.exec(`cd ${this.workingDir}/bundle && gcloud app deploy -q ${flags}`);
