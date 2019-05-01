@@ -20,7 +20,7 @@ Critical, backwards compatible updates are automatically applied to the underlyi
 
 For more information, check: [App Engine Flexible Environment's page](https://cloud.google.com/appengine/docs/flexible/).
 
-## Pricing
+## App Engine Flexible Pricing
 
 Because we run Meteor on the Flexible environment you may not be able to use the free tier of App Engine Standard. For the first year you may have $300 in credit per month, but be aware of the costs:
 
