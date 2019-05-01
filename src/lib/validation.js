@@ -104,6 +104,7 @@ export function validateApp(filePath) {
 
   // Define schema
   const schema = Joi.object({
+    service: Joi.string(),
     runtime: Joi.string(),
     env: Joi.string(),
     threadsafe: Joi.boolean(),
