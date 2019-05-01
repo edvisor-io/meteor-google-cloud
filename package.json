@@ -26,6 +26,9 @@
     "gcp",
     "app-engine"
   ],
+  "directories": {
+    "examples": "src/examples"
+  },
   "author": "Raphael Arias <raphael.arias@geteducation.link>",
   "license": "MIT",
   "bugs": "https://github.com/EducationLink/meteor-google-cloud/issues",

@@ -5,7 +5,9 @@ import shell from 'shelljs';
 import winston from 'winston';
 
 export function initRepo() {
-  const path = '../node_modules/meteor-google-cloud/examples/';
+  const dirName = __dirname;
+
+  const path = dirName.replace('/dist/lib', '/examples/');
   const dockerFile = 'Dockerfile';
   const app = 'app.yml';
   const settings = 'settings.json';
