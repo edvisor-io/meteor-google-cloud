@@ -12,30 +12,33 @@ export function initRepo() {
   const app = 'app.yml';
   const settings = 'settings.json';
 
+  shell.exec('mkdir -p deploy');
+  const newFolderPath = `${process.cwd()}/deploy`;
+
   // Init app.yaml
   if (!fs.existsSync('./deploy/app.yml')) {
-    shell.cp('-R', `${path}${app}`, '.deploy/');
+    shell.cp('-R', `${path}${app}`, newFolderPath);
 
-    winston.info('app.yml created on .deploy/ it has the default/minimum settings you need');
+    winston.info('app.yml created on deploy/ it has the default/minimum settings you need');
   } else {
-    winston.info('app.yml already exists on .deploy/');
+    winston.error('app.yml already exists on deploy/');
   }
 
   // Init Dockerfile
   if (!fs.existsSync('./deploy/Dockerfile')) {
-    shell.cp('-R', `${path}${dockerFile}`, '.deploy/');
+    shell.cp('-R', `${path}${dockerFile}`, newFolderPath);
 
-    winston.info('Dockerfile created on .deploy/');
+    winston.info('Dockerfile created on deploy/');
   } else {
-    winston.info('Dockerfile already exists on .deploy/');
+    winston.error('Dockerfile already exists on deploy/');
   }
 
   // Init settings
   if (!fs.existsSync('./deploy/settings.json')) {
-    shell.cp('-R', `${path}${settings}`, '.deploy/');
+    shell.cp('-R', `${path}${settings}`, newFolderPath);
 
-    winston.info('Meteor settings file created on .deploy/');
+    winston.info('Meteor settings file created on deploy/');
   } else {
-    winston.info('settings.json already exists on .deploy/');
+    winston.error('settings.json already exists on deploy/');
   }
 }
