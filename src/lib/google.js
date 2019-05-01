@@ -36,7 +36,7 @@ export default class AppEngineInstance {
       .replace(/[\n\r]+/g, '');
 
     app = app
-      .replace('METEOR_SETTINGS:', `METEOR_SETTINGS: ${compactSettings} \n`);
+      .replace('METEOR_SETTINGS:', `METEOR_SETTINGS: '${compactSettings}' \n`);
 
     shell.exec(`echo '${app}' >${this.workingDir}/bundle/app.yaml`);
 
