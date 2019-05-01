@@ -1,5 +1,5 @@
 FROM gcr.io/google_appengine/nodejs
-RUN install_node v{{ nodeVersion }}
+RUN install_node {{ nodeVersion }}
 RUN npm install npm@{{ npmVersion }}
 RUN node -v
 RUN npm -v
