@@ -84,7 +84,9 @@ function validateSettings(filePath) {
   } // Define schema
 
 
-  var meteorGoogleCloudConfig = _joi.default.object({});
+  var meteorGoogleCloudConfig = _joi.default.object({
+    project: _joi.default.string()
+  }).unknown(true);
 
   var schema = _joi.default.object({
     'meteor-google-cloud': meteorGoogleCloudConfig

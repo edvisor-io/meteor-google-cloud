@@ -1,5 +1,7 @@
 "use strict";
 
+require("core-js/modules/es.array.map");
+
 require("core-js/modules/es.object.assign");
 
 require("core-js/modules/es.object.to-string");
@@ -95,15 +97,23 @@ function () {
       var _deployBundle = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee() {
+        var settings, flags;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 _winston.default.debug('deploy to App Engine');
 
-                _shelljs.default.exec(`cd ${this.workingDir}/bundle && gcloud app deploy -q`);
+                settings = this.meteorSettings['meteor-google-cloud'];
+                flags = Object.keys(settings).map(function (key) {
+                  return `${key}=${settings[key]}`;
+                }).join(' ');
 
-              case 2:
+                _winston.default.debug(`set flags for deploy: ${flags}`);
+
+                _shelljs.default.exec(`cd ${this.workingDir}/bundle && gcloud app deploy -q ${flags}`);
+
+              case 5:
               case "end":
                 return _context.stop();
             }
