@@ -122,8 +122,8 @@ export function validateApp(filePath) {
   // allow unknown keys (at the top level) for extra settings
   // (https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions)
 
-  // Ensure settings data follows schema
-  winston.debug('check data follows schema');
+  // Ensure settings app yaml follows schema
+  winston.debug('check app yaml follows schema');
   Joi.validate(appFile, schema, { presence: 'required' }, (error) => {
     if (error) {
       // Pull error from bottom of stack to get most specific/useful details
