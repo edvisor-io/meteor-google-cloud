@@ -111,6 +111,11 @@ export function validateApp(filePath) {
     automatic_scaling: Joi.object({
       max_num_instances: Joi.number().min(1),
     }).optional().unknown(true),
+    resources: Joi.object({
+      cpu: Joi.number().min(1),
+      memory_gb: Joi.number(),
+      disk_size_gb: Joi.number(),
+    }).optional().unknown(true),
     network: Joi.object({
       session_affinity: Joi.boolean(),
     }),
