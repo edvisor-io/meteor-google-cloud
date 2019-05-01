@@ -19,14 +19,6 @@ export default class AppEngineInstance {
   }
 
   prepareBundle() {
-    // If no METEOR_SETTINGS was defined in the app.yaml, we set the one we have
-    Object.assign(this.appSettings.env_variables, {
-      METEOR_SETTINGS: '',
-    });
-
-    // Create app.yaml file
-    let app = yaml.safeDump(this.appSettings);
-
     // We add the Meteor settings now to avoid it being compiled to YAML
     const compactSettings = JSON
       .stringify(this.meteorSettings || {}, null, 0)
@@ -35,17 +27,22 @@ export default class AppEngineInstance {
       .replace(/[^\x20-\x7E]/gmi, '')
       .replace(/[\n\r]+/g, '');
 
-    app = app
-      .replace('METEOR_SETTINGS:', `METEOR_SETTINGS: '${compactSettings}' \n`);
+    // We will use shell sed command to replace the variables
+    Object.assign(this.appSettings.env_variables, {
+      METEOR_SETTINGS: '{{ METEOR_SETTINGS }}',
+    });
 
+    // Create app.yaml file
+    const app = yaml.safeDump(this.appSettings);
     shell.exec(`echo '${app}' >${this.workingDir}/bundle/app.yaml`);
+    shell.sed('-i', '{{ METEOR_SETTINGS }}', `'${compactSettings}'`, `${this.workingDir}/bundle/app.yaml`);
 
-    // Create Dockerfile
     const nodeVersion = shell.exec('meteor node -v', { silent: true }).stdout.trim();
     const npmVersion = shell.exec('meteor npm -v', { silent: true }).stdout.trim();
     winston.debug(`set Node to ${nodeVersion}`);
     winston.debug(`set NPM to ${npmVersion}`);
 
+    // Create Dockerfile
     const docker = this.dockerFile
       .replace('{{ nodeVersion }}', nodeVersion)
       .replace('{{ npmVersion }}', npmVersion);
