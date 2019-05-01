@@ -54,6 +54,7 @@ function () {
     this.dockerFile = dockerFile;
     this.appSettings = appFile;
     this.workingDir = workingDir;
+    this.googleCloudSettings = settingsFile['meteor-google-cloud'];
   }
 
   _createClass(AppEngineInstance, [{
@@ -102,11 +103,18 @@ function () {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _winston.default.debug('deploy to App Engine');
+                _winston.default.debug('deploy to App Engine'); // Allow users to pass any option to gcloud app deploy
 
-                settings = this.meteorSettings['meteor-google-cloud'];
+
+                settings = this.googleCloudSettings;
                 flags = Object.keys(settings).map(function (key) {
-                  return `${key}=${settings[key]}`;
+                  var value = settings[key]; // Only some flags actually require a value (e.g. stop-previous-version)
+
+                  if (value) {
+                    return `--${key}=${settings[key]}`;
+                  }
+
+                  return `--${key}`;
                 }).join(' ');
 
                 _winston.default.debug(`set flags for deploy: ${flags}`);

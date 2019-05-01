@@ -1,5 +1,7 @@
 "use strict";
 
+require("core-js/modules/es.object.assign");
+
 require("core-js/modules/es.string.replace");
 
 Object.defineProperty(exports, "__esModule", {
@@ -132,11 +134,17 @@ function validateApp(filePath) {
 
 
   var schema = _joi.default.object({
+    service: _joi.default.string(),
     runtime: _joi.default.string(),
     env: _joi.default.string(),
     threadsafe: _joi.default.boolean(),
     automatic_scaling: _joi.default.object({
       max_num_instances: _joi.default.number().min(1)
+    }).optional().unknown(true),
+    resources: _joi.default.object({
+      cpu: _joi.default.number().min(1),
+      memory_gb: _joi.default.number(),
+      disk_size_gb: _joi.default.number()
     }).optional().unknown(true),
     network: _joi.default.object({
       session_affinity: _joi.default.boolean()
@@ -147,10 +155,10 @@ function validateApp(filePath) {
     }).unknown(true)
   }).unknown(true); // allow unknown keys (at the top level) for extra settings
   // (https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions)
-  // Ensure settings data follows schema
+  // Ensure settings app yaml follows schema
 
 
-  _winston.default.debug('check data follows schema');
+  _winston.default.debug('check app yaml follows schema');
 
   _joi.default.validate(appFile, schema, {
     presence: 'required'
@@ -168,7 +176,16 @@ function validateApp(filePath) {
 
       throw new Error(`App.yaml file (${filePath}): ${lastError.message} in ${pathToParent}`);
     }
-  });
+  }); // Make sure threadsafe is always true otherwise Meteor will not work properly
+
+
+  if (!appFile.threadsafe) {
+    _winston.default.debug('found threadsafe false, change threadsafe to true');
+
+    Object.assign(appFile, {
+      threadsafe: true
+    });
+  }
 
   return appFile;
 }
