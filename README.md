@@ -48,7 +48,7 @@ Follow the guide on: https://cloud.google.com/sdk/install
 If this is the first time you deploy, you will need some specific files on your repo, run the command below to get them automatically generated.
 
 ```bash
-meteor-google-cloud init
+meteor-google-cloud --init
 ```
 
 ### 3. Set your App Engine Flexible settings
