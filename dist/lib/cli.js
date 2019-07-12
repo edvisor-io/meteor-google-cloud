@@ -46,7 +46,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   pkg: _package.default
 }).notify(); // Configure CLI
 
-_commander.default.description(_package.default.description).version(`v${_package.default.version}`, '-v, --version').option('-i, --init', 'init necessary files on your repo').option('-s, --settings <path>', 'path to settings file (settings.json)').option('-c, --app <path>', 'path to app.yaml config file').option('-d, --docker <path>', 'path to Dockerfile file').option('-v, --verbose', 'enable verbose mode').option('-q, --quiet', 'enable quite mode').parse(process.argv); // Pretty print logs
+_commander.default.description(_package.default.description).version(`v${_package.default.version}`, '-v, --version').option('-i, --init', 'init necessary files on your repo').option('-s, --settings <path>', 'path to settings file (settings.json)').option('-c, --app <path>', 'path to app.yaml config file').option('-d, --docker <path>', 'path to Dockerfile file').option('-p, --project <path>', 'path of the directory of your Meteor project').option('-v, --verbose', 'enable verbose mode').option('-q, --quiet', 'enable quite mode').parse(process.argv); // Pretty print logs
 
 
 _winston.default.cli(); // Terminate on shelljs errors
@@ -99,7 +99,9 @@ function _startup() {
             appFile = (0, _validation.validateApp)(_commander.default.app);
             dockerFile = (0, _validation.getDocker)(_commander.default.docker); // Create Meteor bundle
 
-            _compileBundle = (0, _bundle.default)(), workingDir = _compileBundle.workingDir; // Set up GCP App Engine instance
+            _compileBundle = (0, _bundle.default)({
+              dir: _commander.default.project
+            }), workingDir = _compileBundle.workingDir; // Set up GCP App Engine instance
 
             appEngine = new _google.default({
               settingsFile,

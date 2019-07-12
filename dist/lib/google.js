@@ -60,7 +60,12 @@ function () {
   _createClass(AppEngineInstance, [{
     key: "prepareBundle",
     value: function prepareBundle() {
-      // We add the Meteor settings now to avoid it being compiled to YAML
+      // Add default env_variables
+      Object.assign(this.appSettings.env_variables, {
+        GOOGLE_CLOUD_PROJECT: this.googleCloudSettings.project,
+        GAE_SERVICE: this.appSettings.service
+      }); // We add the Meteor settings now to avoid it being compiled to YAML
+
       var compactSettings = JSON.stringify(this.meteorSettings || {}, null, 0) // It will remove all non-printable characters.
       // This are all characters NOT within the ASCII HEX space 0x20-0x7E.
       .replace(/[^\x20-\x7E]/gmi, '').replace(/[\n\r]+/g, ''); // We will use shell sed command to replace the variables

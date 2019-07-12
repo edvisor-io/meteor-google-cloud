@@ -17,7 +17,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // Bundle compilation method
 function compileBundle() {
+  var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+      dir = _ref.dir;
+
   var workingDir = _tmp.default.dirSync().name;
+
+  var customMeteorProjectDirShellEx = `cd ${dir} &&`;
 
   _winston.default.info('Compiling application bundle'); // Generate Meteor build
 
@@ -26,7 +31,7 @@ function compileBundle() {
 
   _shelljs.default.exec(`rm -rf ${workingDir}`);
 
-  _shelljs.default.exec(`meteor build ${workingDir} --directory --server-only --architecture os.linux.x86_64`); // Cleanup broken symlinks
+  _shelljs.default.exec(`${dir ? customMeteorProjectDirShellEx : ''} meteor build ${workingDir} --directory --server-only --architecture os.linux.x86_64`); // Cleanup broken symlinks
 
 
   _winston.default.debug('checking for broken symlinks');
