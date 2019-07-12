@@ -69,7 +69,7 @@ Dockerfile	app.yml		settings.json
 ### 4. Deploy
 
 ```bash
-meteor-google-cloud --settings .deploy/config.json --app .deploy/app.yaml --docker .deploy/Dockerfile 
+meteor-google-cloud --settings deploy/settings.json --app deploy/app.yml --docker deploy/Dockerfile 
 ```
 
 P.S: It may take a few minutes to build your app, which may appear to be unresponsive, but it's not, just wait.
