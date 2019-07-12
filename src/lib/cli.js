@@ -24,6 +24,7 @@ program
   .option('-s, --settings <path>', 'path to settings file (settings.json)')
   .option('-c, --app <path>', 'path to app.yaml config file')
   .option('-d, --docker <path>', 'path to Dockerfile file')
+  .option('-p, --project <path>', 'path of the directory of your Meteor project')
   .option('-v, --verbose', 'enable verbose mode')
   .option('-q, --quiet', 'enable quite mode')
   .parse(process.argv);
@@ -67,7 +68,7 @@ export default async function startup() {
     const dockerFile = getDocker(program.docker);
 
     // Create Meteor bundle
-    const { workingDir } = compileBundle();
+    const { workingDir } = compileBundle({ dir: program.project });
 
     // Set up GCP App Engine instance
     const appEngine = new AppEngineInstance({
