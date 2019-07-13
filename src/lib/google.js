@@ -20,12 +20,6 @@ export default class AppEngineInstance {
   }
 
   prepareBundle() {
-    // Add default env_variables
-    Object.assign(this.appSettings.env_variables, {
-      GOOGLE_CLOUD_PROJECT: this.googleCloudSettings.project,
-      GAE_SERVICE: this.appSettings.service,
-    });
-
     // We add the Meteor settings now to avoid it being compiled to YAML
     const compactSettings = JSON
       .stringify(this.meteorSettings || {}, null, 0)
