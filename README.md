@@ -83,7 +83,8 @@ The Meteor Google Cloud CLI supports the following options:
   -i, --init             init necessary files on your repo
   -s, --settings <path>  path to settings file (settings.json)
   -c, --app <path>       path to app.yaml config file
-  -d, --docker <path>    path to Dockerfile file 
+  -d, --docker <path>    path to Dockerfile file
+  -p, --project <path>   path of the directory of your Meteor project
   -v, --verbose          enable verbose mode
   -q, --quiet            enable quite mode
   -h, --help             output usage information
@@ -103,15 +104,10 @@ Yes, announced in February 5, 2019, [more info](https://cloud.google.com/blog/pr
 
 We welcome any questions, contributions or bug reports in the GitHub [issue tracker](https://github.com/EducationLink/meteor-google-cloud/issues).
 
-## Ideas
+## Meteor Azure
 
-- [ ] Add support for cron, queue, dos, etc.
-- [ ] Use Google Deployment Manager (when fully supported)
-- [ ] Support multiple service deployment (?)
-- [ ] Set up CI
+This package was heavily inspired on `meteor-azure`, a deployment packge for Meteor applicatons on Microsoft Azure, [click here](https://github.com/fractal-code/meteor-azure) for more information.
 
 ## License
 
 [MIT](https://github.com/EducationLink/meteor-google-cloud/blob/master/LICENSE)
-
-This package was heavily inspired on `meteor-azure`, a deployment packge for Meteor applicatons on Microsoft Azure, [click here](https://github.com/fractal-code/meteor-azure) for more information.
