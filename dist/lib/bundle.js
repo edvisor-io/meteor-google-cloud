@@ -20,7 +20,8 @@ function compileBundle() {
   var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
       dir = _ref.dir,
       _ref$workingDir = _ref.workingDir,
-      workingDir = _ref$workingDir === void 0 ? _tmp.default.dirSync().name : _ref$workingDir;
+      workingDir = _ref$workingDir === void 0 ? _tmp.default.dirSync().name : _ref$workingDir,
+      ci = _ref.ci;
 
   var customMeteorProjectDirShellEx = `cd ${dir} &&`;
 
@@ -31,7 +32,7 @@ function compileBundle() {
 
   _shelljs.default.exec(`rm -rf ${workingDir}`);
 
-  _shelljs.default.exec(`${dir ? customMeteorProjectDirShellEx : ''} meteor build ${workingDir} --directory --server-only --architecture os.linux.x86_64`); // Cleanup broken symlinks
+  _shelljs.default.exec(`${dir ? customMeteorProjectDirShellEx : ''} meteor build ${workingDir} ${ci ? '--allow-superuser' : ''} --directory --server-only --architecture os.linux.x86_64`); // Cleanup broken symlinks
 
 
   _winston.default.debug('checking for broken symlinks');

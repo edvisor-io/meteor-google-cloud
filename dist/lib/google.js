@@ -46,7 +46,8 @@ function () {
     var settingsFile = _ref.settingsFile,
         dockerFile = _ref.dockerFile,
         appFile = _ref.appFile,
-        workingDir = _ref.workingDir;
+        workingDir = _ref.workingDir,
+        ci = _ref.ci;
 
     _classCallCheck(this, AppEngineInstance);
 
@@ -55,6 +56,7 @@ function () {
     this.appSettings = appFile;
     this.workingDir = workingDir;
     this.googleCloudSettings = settingsFile['meteor-google-cloud'];
+    this.ci = ci;
   }
 
   _createClass(AppEngineInstance, [{
@@ -75,11 +77,11 @@ function () {
 
       _shelljs.default.sed('-i', '{{ METEOR_SETTINGS }}', `'${compactSettings}'`, `${this.workingDir}/bundle/app.yaml`);
 
-      var nodeVersion = _shelljs.default.exec('meteor node -v', {
+      var nodeVersion = _shelljs.default.exec(`meteor node -v ${this.ci ? '--allow-superuser' : ''}`, {
         silent: true
       }).stdout.trim();
 
-      var npmVersion = _shelljs.default.exec('meteor npm -v', {
+      var npmVersion = _shelljs.default.exec(`meteor npm -v${this.ci ? '--allow-superuser' : ''}`, {
         silent: true
       }).stdout.trim();
 
