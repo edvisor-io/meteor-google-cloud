@@ -90,8 +90,11 @@ function _startup() {
             return _context.abrupt("return");
 
           case 5:
-            // Validate if gcloud is installed
-            (0, _validation.validateGCloud)(); // Validate Meteor version/packages
+            if (!_commander.default.buildOnly) {
+              // Validate if gcloud is installed (Only when it requires deployment)
+              (0, _validation.validateGCloud)();
+            } // Validate Meteor version/packages
+
 
             (0, _validation.validateMeteor)(); // Validate settings file(s)
 
