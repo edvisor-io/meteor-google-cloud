@@ -18,9 +18,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // Bundle compilation method
 function compileBundle() {
   var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-      dir = _ref.dir;
-
-  var workingDir = _tmp.default.dirSync().name;
+      dir = _ref.dir,
+      _ref$workingDir = _ref.workingDir,
+      workingDir = _ref$workingDir === void 0 ? _tmp.default.dirSync().name : _ref$workingDir;
 
   var customMeteorProjectDirShellEx = `cd ${dir} &&`;
 

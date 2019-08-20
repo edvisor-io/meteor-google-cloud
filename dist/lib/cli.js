@@ -46,7 +46,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   pkg: _package.default
 }).notify(); // Configure CLI
 
-_commander.default.description(_package.default.description).version(`v${_package.default.version}`, '-v, --version').option('-i, --init', 'init necessary files on your repo').option('-s, --settings <path>', 'path to settings file (settings.json)').option('-c, --app <path>', 'path to app.yaml config file').option('-d, --docker <path>', 'path to Dockerfile file').option('-p, --project <path>', 'path of the directory of your Meteor project').option('-v, --verbose', 'enable verbose mode').option('-q, --quiet', 'enable quite mode').parse(process.argv); // Pretty print logs
+_commander.default.description(_package.default.description).version(`v${_package.default.version}`, '-v, --version').option('-i, --init', 'init necessary files on your repo').option('-b, --build-only', 'build bundle only').option('-s, --settings <path>', 'path to settings file (settings.json)').option('-c, --app <path>', 'path to app.yaml config file').option('-d, --docker <path>', 'path to Dockerfile file').option('-p, --project <path>', 'path of the directory of your Meteor project').option('-v, --verbose', 'enable verbose mode').option('-q, --quiet', 'enable quite mode').option('-o, --output-dir <path>', 'build files output directory').parse(process.argv); // Pretty print logs
 
 
 _winston.default.cli(); // Terminate on shelljs errors
@@ -72,7 +72,7 @@ function _startup() {
   _startup = _asyncToGenerator(
   /*#__PURE__*/
   regeneratorRuntime.mark(function _callee() {
-    var settingsFile, appFile, dockerFile, _compileBundle, workingDir, appEngine;
+    var settingsFile, appFile, dockerFile, outputDir, _compileBundle, workingDir, appEngine;
 
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -97,10 +97,12 @@ function _startup() {
 
             settingsFile = (0, _validation.validateSettings)(_commander.default.settings);
             appFile = (0, _validation.validateApp)(_commander.default.app);
-            dockerFile = (0, _validation.getDocker)(_commander.default.docker); // Create Meteor bundle
+            dockerFile = (0, _validation.getDocker)(_commander.default.docker);
+            outputDir = _commander.default.outputDir; // Create Meteor bundle
 
             _compileBundle = (0, _bundle.default)({
-              dir: _commander.default.project
+              dir: _commander.default.project,
+              workingDir: outputDir
             }), workingDir = _compileBundle.workingDir; // Set up GCP App Engine instance
 
             appEngine = new _google.default({
@@ -109,14 +111,24 @@ function _startup() {
               dockerFile,
               workingDir
             });
-            appEngine.prepareBundle();
-            appEngine.deployBundle();
+            appEngine.prepareBundle(); // If --build-only flag was passed, exit
+
+            if (!(_commander.default.buildOnly === true)) {
+              _context.next = 17;
+              break;
+            }
+
             process.exit(0);
-            _context.next = 22;
-            break;
+            return _context.abrupt("return");
 
           case 17:
-            _context.prev = 17;
+            appEngine.deployBundle();
+            process.exit(0);
+            _context.next = 26;
+            break;
+
+          case 21:
+            _context.prev = 21;
             _context.t0 = _context["catch"](0);
 
             _tmp.default.setGracefulCleanup();
@@ -125,12 +137,12 @@ function _startup() {
 
             process.exit(1);
 
-          case 22:
+          case 26:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 17]]);
+    }, _callee, null, [[0, 21]]);
   }));
   return _startup.apply(this, arguments);
 }
