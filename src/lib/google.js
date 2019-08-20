@@ -11,12 +11,14 @@ export default class AppEngineInstance {
     dockerFile,
     appFile,
     workingDir,
+    ci,
   }) {
     this.meteorSettings = omit(settingsFile, 'meteor-google-cloud');
     this.dockerFile = dockerFile;
     this.appSettings = appFile;
     this.workingDir = workingDir;
     this.googleCloudSettings = settingsFile['meteor-google-cloud'];
+    this.ci = ci;
   }
 
   prepareBundle() {
@@ -38,8 +40,14 @@ export default class AppEngineInstance {
     shell.exec(`echo '${app}' >${this.workingDir}/bundle/app.yaml`);
     shell.sed('-i', '{{ METEOR_SETTINGS }}', `'${compactSettings}'`, `${this.workingDir}/bundle/app.yaml`);
 
-    const nodeVersion = shell.exec('meteor node -v', { silent: true }).stdout.trim();
-    const npmVersion = shell.exec('meteor npm -v', { silent: true }).stdout.trim();
+    const nodeVersion = shell.exec(
+      `meteor node -v ${this.ci ? '--allow-superuser' : ''}`,
+      { silent: true },
+    ).stdout.trim();
+    const npmVersion = shell.exec(
+      `meteor npm -v${this.ci ? '--allow-superuser' : ''}`,
+      { silent: true },
+    ).stdout.trim();
     winston.debug(`set Node to ${nodeVersion}`);
     winston.debug(`set NPM to ${npmVersion}`);
 

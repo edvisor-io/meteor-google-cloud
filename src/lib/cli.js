@@ -28,6 +28,7 @@ program
   .option('-p, --project <path>', 'path of the directory of your Meteor project')
   .option('-v, --verbose', 'enable verbose mode')
   .option('-q, --quiet', 'enable quite mode')
+  .option('-ci, --ci', 'add --allow-superuser flag in meteor commands for running in CI')
   .option('-o, --output-dir <path>', 'build files output directory')
   .parse(process.argv);
 
@@ -73,7 +74,11 @@ export default async function startup() {
     const outputDir = program.outputDir;
 
     // Create Meteor bundle
-    const { workingDir } = compileBundle({ dir: program.project, workingDir: outputDir });
+    const { workingDir } = compileBundle({
+      dir: program.project,
+      workingDir: outputDir,
+      ci: program.ci,
+    });
 
     // Set up GCP App Engine instance
     const appEngine = new AppEngineInstance({
@@ -81,6 +86,7 @@ export default async function startup() {
       appFile,
       dockerFile,
       workingDir,
+      ci: program.ci,
     });
 
     appEngine.prepareBundle();

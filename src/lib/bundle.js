@@ -5,7 +5,7 @@ import path from 'path';
 import shell from 'shelljs';
 import winston from 'winston';
 
-export default function compileBundle({ dir, workingDir = tmp.dirSync().name } = {}) {
+export default function compileBundle({ dir, workingDir = tmp.dirSync().name, ci } = {}) {
   const customMeteorProjectDirShellEx = `cd ${dir} &&`;
 
   winston.info('Compiling application bundle');
@@ -13,7 +13,7 @@ export default function compileBundle({ dir, workingDir = tmp.dirSync().name } =
   // Generate Meteor build
   winston.debug(`generate meteor build at ${workingDir}`);
   shell.exec(`rm -rf ${workingDir}`);
-  shell.exec(`${dir ? customMeteorProjectDirShellEx : ''} meteor build ${workingDir} --directory --server-only --architecture os.linux.x86_64`);
+  shell.exec(`${dir ? customMeteorProjectDirShellEx : ''} meteor build ${workingDir} ${ci ? '--allow-superuser' : ''} --directory --server-only --architecture os.linux.x86_64`);
 
   // Cleanup broken symlinks
   winston.debug('checking for broken symlinks');

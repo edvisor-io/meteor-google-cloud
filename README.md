@@ -89,6 +89,7 @@ The Meteor Google Cloud CLI supports the following options:
   -o, --output-dir <path>   path of the output directory of build files
   -v, --verbose             enable verbose mode
   -q, --quiet               enable quite mode
+  -ci, --ci                 add --allow-superuser flag in meteor commands for running in CI
   -h, --help                output usage information
 ```
 
