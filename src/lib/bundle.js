@@ -5,8 +5,7 @@ import path from 'path';
 import shell from 'shelljs';
 import winston from 'winston';
 
-export default function compileBundle({ dir } = {}) {
-  const workingDir = tmp.dirSync().name;
+export default function compileBundle({ dir, workingDir = tmp.dirSync().name } = {}) {
   const customMeteorProjectDirShellEx = `cd ${dir} &&`;
 
   winston.info('Compiling application bundle');

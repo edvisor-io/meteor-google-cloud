@@ -79,15 +79,17 @@ P.S: It may take a few minutes to build your app, which may appear to be unrespo
 The Meteor Google Cloud CLI supports the following options:
 
 ```bash
-  -v, --version          output the version number
-  -i, --init             init necessary files on your repo
-  -s, --settings <path>  path to settings file (settings.json)
-  -c, --app <path>       path to app.yaml config file
-  -d, --docker <path>    path to Dockerfile file
-  -p, --project <path>   path of the directory of your Meteor project
-  -v, --verbose          enable verbose mode
-  -q, --quiet            enable quite mode
-  -h, --help             output usage information
+  -v, --version             output the version number
+  -i, --init                init necessary files on your repo
+  -b, --build-only          build only, without deploying to gcp
+  -s, --settings <path>     path to settings file (settings.json)
+  -c, --app <path>          path to app.yaml config file
+  -d, --docker <path>       path to Dockerfile file
+  -p, --project <path>      path of the directory of your Meteor project
+  -o, --output-dir <path>   path of the output directory of build files
+  -v, --verbose             enable verbose mode
+  -q, --quiet               enable quite mode
+  -h, --help                output usage information
 ```
 
 ## FAQ

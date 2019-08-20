@@ -21,12 +21,14 @@ program
   .description(pkg.description)
   .version(`v${pkg.version}`, '-v, --version')
   .option('-i, --init', 'init necessary files on your repo')
+  .option('-b, --build-only', 'build bundle only')
   .option('-s, --settings <path>', 'path to settings file (settings.json)')
   .option('-c, --app <path>', 'path to app.yaml config file')
   .option('-d, --docker <path>', 'path to Dockerfile file')
   .option('-p, --project <path>', 'path of the directory of your Meteor project')
   .option('-v, --verbose', 'enable verbose mode')
   .option('-q, --quiet', 'enable quite mode')
+  .option('-o, --output-dir <path>', 'build files output directory')
   .parse(process.argv);
 
 // Pretty print logs
@@ -66,9 +68,10 @@ export default async function startup() {
     const settingsFile = validateSettings(program.settings);
     const appFile = validateApp(program.app);
     const dockerFile = getDocker(program.docker);
+    const outputDir = program.outputDir;
 
     // Create Meteor bundle
-    const { workingDir } = compileBundle({ dir: program.project });
+    const { workingDir } = compileBundle({ dir: program.project, workingDir: outputDir });
 
     // Set up GCP App Engine instance
     const appEngine = new AppEngineInstance({
@@ -77,7 +80,15 @@ export default async function startup() {
       dockerFile,
       workingDir,
     });
+
     appEngine.prepareBundle();
+
+    // If --build-only flag was passed, exit
+    if (program.buildOnly === true) {
+      process.exit(0);
+      return;
+    }
+
     appEngine.deployBundle();
 
     process.exit(0);
