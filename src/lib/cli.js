@@ -58,8 +58,10 @@ export default async function startup() {
       return;
     }
 
-    // Validate if gcloud is installed
-    validateGCloud();
+    if (!program.buildOnly) {
+      // Validate if gcloud is installed (Only when it requires deployment)
+      validateGCloud();
+    }
 
     // Validate Meteor version/packages
     validateMeteor();
