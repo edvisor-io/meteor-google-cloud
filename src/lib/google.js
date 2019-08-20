@@ -45,7 +45,7 @@ export default class AppEngineInstance {
       { silent: true },
     ).stdout.trim();
     const npmVersion = shell.exec(
-      `meteor npm -v${this.ci ? '--allow-superuser' : ''}`,
+      `meteor npm -v ${this.ci ? '--allow-superuser' : ''}`,
       { silent: true },
     ).stdout.trim();
     winston.debug(`set Node to ${nodeVersion}`);
