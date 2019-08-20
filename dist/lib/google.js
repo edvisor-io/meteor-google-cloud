@@ -81,7 +81,7 @@ function () {
         silent: true
       }).stdout.trim();
 
-      var npmVersion = _shelljs.default.exec(`meteor npm -v${this.ci ? '--allow-superuser' : ''}`, {
+      var npmVersion = _shelljs.default.exec(`meteor npm -v ${this.ci ? '--allow-superuser' : ''}`, {
         silent: true
       }).stdout.trim();
 
