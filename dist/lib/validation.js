@@ -12,6 +12,7 @@ exports.validateMeteor = validateMeteor;
 exports.validateSettings = validateSettings;
 exports.validateApp = validateApp;
 exports.getDocker = getDocker;
+exports.validateEnv = validateEnv;
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -148,11 +149,7 @@ function validateApp(filePath) {
     }).optional().unknown(true),
     network: _joi.default.object({
       session_affinity: _joi.default.boolean()
-    }),
-    env_variables: _joi.default.object({
-      ROOT_URL: _joi.default.string(),
-      MONGO_URL: _joi.default.string()
-    }).unknown(true)
+    })
   }).unknown(true); // allow unknown keys (at the top level) for extra settings
   // (https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions)
   // Ensure settings app yaml follows schema
@@ -205,4 +202,35 @@ function getDocker(filePath) {
   }
 
   return dockerFile;
+}
+
+function validateEnv(settings, app) {
+  _winston.default.debug('check either settings.json or app.yaml contain the required env');
+
+  var appSchema = _joi.default.object({
+    env_variables: _joi.default.object({
+      ROOT_URL: _joi.default.string(),
+      MONGO_URL: _joi.default.string()
+    }).unknown(true)
+  }).unknown(true);
+
+  var settingsValidation = _joi.default.validate(settings, _joi.default.object({
+    'meteor-google-cloud': appSchema
+  }).unknown(true), {
+    presence: 'required'
+  });
+
+  var appValidation = _joi.default.validate(app, appSchema, {
+    presence: 'required'
+  });
+
+  if (settingsValidation.error === null) {
+    return settings['meteor-google-cloud'].env_variables;
+  }
+
+  if (appValidation.error === null) {
+    return app.env_variables;
+  }
+
+  throw new Error('neither app.yaml, nor settings.json did contain the env_variables');
 }

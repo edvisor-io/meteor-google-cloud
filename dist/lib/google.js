@@ -27,6 +27,8 @@ var _winston = _interopRequireDefault(require("winston"));
 
 var _jsYaml = _interopRequireDefault(require("js-yaml"));
 
+var _fs = _interopRequireDefault(require("fs"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -47,7 +49,8 @@ function () {
         dockerFile = _ref.dockerFile,
         appFile = _ref.appFile,
         workingDir = _ref.workingDir,
-        ci = _ref.ci;
+        ci = _ref.ci,
+        env = _ref.env;
 
     _classCallCheck(this, AppEngineInstance);
 
@@ -57,6 +60,7 @@ function () {
     this.workingDir = workingDir;
     this.googleCloudSettings = settingsFile['meteor-google-cloud'];
     this.ci = ci;
+    this.env = env;
   }
 
   _createClass(AppEngineInstance, [{
@@ -69,13 +73,17 @@ function () {
 
       Object.assign(this.appSettings.env_variables, {
         METEOR_SETTINGS: '{{ METEOR_SETTINGS }}'
-      }); // Create app.yaml file
+      }); // make sure the env_variables are set
+
+      this.appSettings.env_variables = this.env; // Create app.yaml file
 
       var app = _jsYaml.default.safeDump(this.appSettings);
 
       _shelljs.default.exec(`echo '${app}' >${this.workingDir}/bundle/app.yaml`);
 
       _shelljs.default.sed('-i', '{{ METEOR_SETTINGS }}', `'${compactSettings}'`, `${this.workingDir}/bundle/app.yaml`);
+
+      _winston.default.debug(`the following app.yaml will be used: ${JSON.stringify(_jsYaml.default.safeLoad(_fs.default.readFileSync(`${this.workingDir}/bundle/app.yaml`)))}`);
 
       var nodeVersion = _shelljs.default.exec(`meteor node -v ${this.ci ? '--allow-superuser' : ''}`, {
         silent: true
@@ -110,13 +118,15 @@ function () {
 
                 settings = this.googleCloudSettings;
                 flags = Object.keys(settings).map(function (key) {
-                  var value = settings[key]; // Only some flags actually require a value (e.g. stop-previous-version)
+                  if (key !== 'env_variables') {
+                    var value = settings[key]; // Only some flags actually require a value (e.g. stop-previous-version)
 
-                  if (value) {
-                    return `--${key}=${settings[key]}`;
+                    if (value) {
+                      return `--${key}=${settings[key]}`;
+                    }
+
+                    return `--${key}`;
                   }
-
-                  return `--${key}`;
                 }).join(' ');
 
                 _winston.default.debug(`set flags for deploy: ${flags}`);

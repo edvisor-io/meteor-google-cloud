@@ -72,7 +72,7 @@ function _startup() {
   _startup = _asyncToGenerator(
   /*#__PURE__*/
   regeneratorRuntime.mark(function _callee() {
-    var settingsFile, appFile, dockerFile, outputDir, _compileBundle, workingDir, appEngine;
+    var settingsFile, appFile, dockerFile, outputDir, env, _compileBundle, workingDir, appEngine;
 
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -101,7 +101,13 @@ function _startup() {
             settingsFile = (0, _validation.validateSettings)(_commander.default.settings);
             appFile = (0, _validation.validateApp)(_commander.default.app);
             dockerFile = (0, _validation.getDocker)(_commander.default.docker);
-            outputDir = _commander.default.outputDir; // Create Meteor bundle
+            outputDir = _commander.default.outputDir;
+            /*
+             Validate that either settingsFile[meteor-google-cloud].env_variables
+             or appFile.env_variables contains the needed variables
+             */
+
+            env = (0, _validation.validateEnv)(settingsFile, appFile); // Create Meteor bundle
 
             _compileBundle = (0, _bundle.default)({
               dir: _commander.default.project,
@@ -114,26 +120,27 @@ function _startup() {
               appFile,
               dockerFile,
               workingDir,
-              ci: _commander.default.ci
+              ci: _commander.default.ci,
+              env
             });
             appEngine.prepareBundle(); // If --build-only flag was passed, exit
 
             if (!(_commander.default.buildOnly === true)) {
-              _context.next = 17;
+              _context.next = 18;
               break;
             }
 
             process.exit(0);
             return _context.abrupt("return");
 
-          case 17:
+          case 18:
             appEngine.deployBundle();
             process.exit(0);
-            _context.next = 26;
+            _context.next = 27;
             break;
 
-          case 21:
-            _context.prev = 21;
+          case 22:
+            _context.prev = 22;
             _context.t0 = _context["catch"](0);
 
             _tmp.default.setGracefulCleanup();
@@ -142,12 +149,12 @@ function _startup() {
 
             process.exit(1);
 
-          case 26:
+          case 27:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 21]]);
+    }, _callee, null, [[0, 22]]);
   }));
   return _startup.apply(this, arguments);
 }

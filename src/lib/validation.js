@@ -119,10 +119,6 @@ export function validateApp(filePath) {
     network: Joi.object({
       session_affinity: Joi.boolean(),
     }),
-    env_variables: Joi.object({
-      ROOT_URL: Joi.string(),
-      MONGO_URL: Joi.string(),
-    }).unknown(true),
   }).unknown(true);
   // allow unknown keys (at the top level) for extra settings
   // (https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions)
@@ -171,4 +167,25 @@ export function getDocker(filePath) {
   }
 
   return dockerFile;
+}
+
+export function validateEnv(settings, app) {
+  winston.debug('check either settings.json or app.yaml contain the required env');
+  const appSchema = Joi.object({
+    env_variables: Joi.object({
+      ROOT_URL: Joi.string(),
+      MONGO_URL: Joi.string(),
+    }).unknown(true),
+  }).unknown(true);
+  const settingsValidation = Joi.validate(settings, Joi.object({
+    'meteor-google-cloud': appSchema,
+  }).unknown(true), { presence: 'required' });
+  const appValidation = Joi.validate(app, appSchema, { presence: 'required' });
+  if (settingsValidation.error === null) {
+    return settings['meteor-google-cloud'].env_variables;
+  }
+  if (appValidation.error === null) {
+    return app.env_variables;
+  }
+  throw new Error('neither app.yaml, nor settings.json did contain the env_variables');
 }

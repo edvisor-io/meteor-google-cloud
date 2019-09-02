@@ -103,6 +103,7 @@ Yes, announced in February 5, 2019, [more info](https://cloud.google.com/blog/pr
 
 **4. Do I get auto healing?** Yes.
 
+**5. Can I add the environment variables to the `settings.json?`** Yes. Just create add a property `env_variables` to `meteor-google-cloud`. It will prefer those over the ones in your `app.yaml`.
 ## Support
 
 We welcome any questions, contributions or bug reports in the GitHub [issue tracker](https://github.com/EducationLink/meteor-google-cloud/issues).
