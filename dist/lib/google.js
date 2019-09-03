@@ -69,13 +69,13 @@ function () {
       // We add the Meteor settings now to avoid it being compiled to YAML
       var compactSettings = JSON.stringify(this.meteorSettings || {}, null, 0) // It will remove all non-printable characters.
       // This are all characters NOT within the ASCII HEX space 0x20-0x7E.
-      .replace(/[^\x20-\x7E]/gmi, '').replace(/[\n\r]+/g, ''); // We will use shell sed command to replace the variables
+      .replace(/[^\x20-\x7E]/gmi, '').replace(/[\n\r]+/g, ''); // make sure the env_variables are set
+
+      this.appSettings.env_variables = this.env; // We will use shell sed command to replace the variables
 
       Object.assign(this.appSettings.env_variables, {
         METEOR_SETTINGS: '{{ METEOR_SETTINGS }}'
-      }); // make sure the env_variables are set
-
-      this.appSettings.env_variables = this.env; // Create app.yaml file
+      }); // Create app.yaml file
 
       var app = _jsYaml.default.safeDump(this.appSettings);
 
@@ -83,7 +83,7 @@ function () {
 
       _shelljs.default.sed('-i', '{{ METEOR_SETTINGS }}', `'${compactSettings}'`, `${this.workingDir}/bundle/app.yaml`);
 
-      _winston.default.debug(`the following app.yaml will be used: ${JSON.stringify(_jsYaml.default.safeLoad(_fs.default.readFileSync(`${this.workingDir}/bundle/app.yaml`)))}`);
+      _winston.default.debug(`the following app.yaml will be used:\n${JSON.stringify(_jsYaml.default.safeLoad(_fs.default.readFileSync(`${this.workingDir}/bundle/app.yaml`)))}`);
 
       var nodeVersion = _shelljs.default.exec(`meteor node -v ${this.ci ? '--allow-superuser' : ''}`, {
         silent: true
@@ -101,6 +101,8 @@ function () {
       var docker = this.dockerFile.replace('{{ nodeVersion }}', nodeVersion).replace('{{ npmVersion }}', npmVersion);
 
       _shelljs.default.exec(`echo '${docker}' >${this.workingDir}/bundle/Dockerfile`);
+
+      _winston.default.debug(`the following Dockerfile will be used:\n${JSON.stringify(_jsYaml.default.safeLoad(_fs.default.readFileSync(`${this.workingDir}/bundle/Dockerfile`)))}`);
     }
   }, {
     key: "deployBundle",

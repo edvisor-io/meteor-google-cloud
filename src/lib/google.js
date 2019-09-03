@@ -32,19 +32,19 @@ export default class AppEngineInstance {
       // This are all characters NOT within the ASCII HEX space 0x20-0x7E.
       .replace(/[^\x20-\x7E]/gmi, '')
       .replace(/[\n\r]+/g, '');
+
+    // make sure the env_variables are set
+    this.appSettings.env_variables = this.env;
     // We will use shell sed command to replace the variables
     Object.assign(this.appSettings.env_variables, {
       METEOR_SETTINGS: '{{ METEOR_SETTINGS }}',
     });
 
-    // make sure the env_variables are set
-    this.appSettings.env_variables = this.env;
-
     // Create app.yaml file
     const app = yaml.safeDump(this.appSettings);
     shell.exec(`echo '${app}' >${this.workingDir}/bundle/app.yaml`);
     shell.sed('-i', '{{ METEOR_SETTINGS }}', `'${compactSettings}'`, `${this.workingDir}/bundle/app.yaml`);
-    winston.debug(`the following app.yaml will be used: ${JSON.stringify(yaml.safeLoad(
+    winston.debug(`the following app.yaml will be used:\n${JSON.stringify(yaml.safeLoad(
       fs.readFileSync(`${this.workingDir}/bundle/app.yaml`),
     ))}`);
     const nodeVersion = shell.exec(
@@ -64,6 +64,9 @@ export default class AppEngineInstance {
       .replace('{{ npmVersion }}', npmVersion);
 
     shell.exec(`echo '${docker}' >${this.workingDir}/bundle/Dockerfile`);
+    winston.debug(`the following Dockerfile will be used:\n${JSON.stringify(yaml.safeLoad(
+      fs.readFileSync(`${this.workingDir}/bundle/Dockerfile`),
+    ))}`);
   }
 
   async deployBundle() {

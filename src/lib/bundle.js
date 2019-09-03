@@ -25,6 +25,5 @@ export default function compileBundle({ dir, workingDir = tmp.dirSync().name, ci
       winston.debug(`deleted symlink at '${symlinkPath}'`);
     }
   });
-
   return { workingDir };
 }
