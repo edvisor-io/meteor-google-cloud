@@ -30,6 +30,7 @@ program
   .option('-q, --quiet', 'enable quite mode')
   .option('-ci, --ci', 'add --allow-superuser flag in meteor commands for running in CI')
   .option('-o, --output-dir <path>', 'build files output directory')
+  .option('-k, --keep-output-dir', 'do not remove the output directory before start')
   .parse(process.argv);
 
 // Pretty print logs
@@ -82,6 +83,7 @@ export default async function startup() {
       dir: program.project,
       workingDir: outputDir,
       ci: program.ci,
+      keep: program.keepOutputDir,
     });
 
     // Set up GCP App Engine instance

@@ -46,7 +46,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   pkg: _package.default
 }).notify(); // Configure CLI
 
-_commander.default.description(_package.default.description).version(`v${_package.default.version}`, '-v, --version').option('-i, --init', 'init necessary files on your repo').option('-b, --build-only', 'build bundle only').option('-s, --settings <path>', 'path to settings file (settings.json)').option('-c, --app <path>', 'path to app.yaml config file').option('-d, --docker <path>', 'path to Dockerfile file').option('-p, --project <path>', 'path of the directory of your Meteor project').option('-v, --verbose', 'enable verbose mode').option('-q, --quiet', 'enable quite mode').option('-ci, --ci', 'add --allow-superuser flag in meteor commands for running in CI').option('-o, --output-dir <path>', 'build files output directory').parse(process.argv); // Pretty print logs
+_commander.default.description(_package.default.description).version(`v${_package.default.version}`, '-v, --version').option('-i, --init', 'init necessary files on your repo').option('-b, --build-only', 'build bundle only').option('-s, --settings <path>', 'path to settings file (settings.json)').option('-c, --app <path>', 'path to app.yaml config file').option('-d, --docker <path>', 'path to Dockerfile file').option('-p, --project <path>', 'path of the directory of your Meteor project').option('-v, --verbose', 'enable verbose mode').option('-q, --quiet', 'enable quite mode').option('-ci, --ci', 'add --allow-superuser flag in meteor commands for running in CI').option('-o, --output-dir <path>', 'build files output directory').option('-k, --keep-output-dir', 'do not remove the output directory before start').parse(process.argv); // Pretty print logs
 
 
 _winston.default.cli(); // Terminate on shelljs errors
@@ -112,7 +112,8 @@ function _startup() {
             _compileBundle = (0, _bundle.default)({
               dir: _commander.default.project,
               workingDir: outputDir,
-              ci: _commander.default.ci
+              ci: _commander.default.ci,
+              keep: _commander.default.keepOutputDir
             }), workingDir = _compileBundle.workingDir; // Set up GCP App Engine instance
 
             appEngine = new _google.default({

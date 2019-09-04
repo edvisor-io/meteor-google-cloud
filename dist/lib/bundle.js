@@ -21,7 +21,8 @@ function compileBundle() {
       dir = _ref.dir,
       _ref$workingDir = _ref.workingDir,
       workingDir = _ref$workingDir === void 0 ? _tmp.default.dirSync().name : _ref$workingDir,
-      ci = _ref.ci;
+      ci = _ref.ci,
+      keep = _ref.keep;
 
   var customMeteorProjectDirShellEx = `cd ${dir} &&`;
 
@@ -30,7 +31,13 @@ function compileBundle() {
 
   _winston.default.debug(`generate meteor build at ${workingDir}`);
 
-  _shelljs.default.exec(`rm -rf ${workingDir}`);
+  if (!keep) {
+    _winston.default.debug(`removing ${workingDir}`);
+
+    _shelljs.default.exec(`rm -rf ${workingDir}`);
+  } else {
+    _winston.default.debug(`keeping ${workingDir}, if it exists`);
+  }
 
   _shelljs.default.exec(`${dir ? customMeteorProjectDirShellEx : ''} meteor build ${workingDir} ${ci ? '--allow-superuser' : ''} --directory --server-only --architecture os.linux.x86_64`); // Cleanup broken symlinks
 
