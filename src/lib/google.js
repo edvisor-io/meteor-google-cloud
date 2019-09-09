@@ -44,9 +44,10 @@ export default class AppEngineInstance {
     const app = yaml.safeDump(this.appSettings);
     shell.exec(`echo '${app}' >${this.workingDir}/bundle/app.yaml`);
     shell.sed('-i', '{{ METEOR_SETTINGS }}', `'${compactSettings}'`, `${this.workingDir}/bundle/app.yaml`);
-    winston.debug(`the following app.yaml will be used:\n${JSON.stringify(yaml.safeLoad(
-      fs.readFileSync(`${this.workingDir}/bundle/app.yaml`),
-    ))}`);
+    const resultAppYaml = yaml.safeLoad(fs.readFileSync(`${this.workingDir}/bundle/app.yaml`));
+    resultAppYaml.env_variables.MONGO_URL = '*****';
+    resultAppYaml.env_variables.MONGO_OPLOG_URL = '*****';
+    winston.debug(`the following app.yaml will be used:\n${JSON.stringify(resultAppYaml)}`);
     const nodeVersion = shell.exec(
       `meteor node -v ${this.ci ? '--allow-superuser' : ''}`,
       { silent: true },
