@@ -18,8 +18,6 @@ export function validateGCloud() {
 }
 
 export function validateMeteor() {
-  let release;
-
   // Ensure Meteor CLI is installed
   winston.debug('check Meteor is installed');
   if (commandExists.sync('meteor') === false) {
@@ -28,22 +26,11 @@ export function validateMeteor() {
 
   // Determine current release/packages from '.meteor' directory
   try {
-    release = fs.readFileSync('.meteor/release', 'utf8');
+    fs.readFileSync('.meteor/release', 'utf8');
   } catch (error) {
     /* Abort the program if files are not found, this is a strong
        indication we may not be in the root project directory */
     throw new Error('You must be in a Meteor project directory');
-  }
-
-  // Determine major/minor version numbers by stripping non-numeric characters from release
-  const versionNumbers = release.replace(/[^0-9]/g, '');
-  const majorVersion = Number.parseInt(versionNumbers.charAt(0), 10);
-  const minorVersion = Number.parseInt(versionNumbers.charAt(1), 10);
-
-  // Ensure current Meteor release is >= 1.4
-  winston.debug('check current Meteor release >= 1.4');
-  if (majorVersion < 1 || minorVersion < 4) {
-    throw new Error('Meteor version must be >= 1.4');
   }
 }
 
