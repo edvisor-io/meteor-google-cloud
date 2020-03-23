@@ -50,7 +50,9 @@ function () {
         appFile = _ref.appFile,
         workingDir = _ref.workingDir,
         ci = _ref.ci,
-        env = _ref.env;
+        env = _ref.env,
+        nodeVersion = _ref.nodeVersion,
+        npmVersion = _ref.npmVersion;
 
     _classCallCheck(this, AppEngineInstance);
 
@@ -61,6 +63,8 @@ function () {
     this.googleCloudSettings = settingsFile['meteor-google-cloud'];
     this.ci = ci;
     this.env = env;
+    this.nodeVersion = nodeVersion;
+    this.npmVersion = npmVersion;
   }
 
   _createClass(AppEngineInstance, [{
@@ -90,11 +94,11 @@ function () {
 
       _winston.default.debug(`the following app.yaml will be used:\n${JSON.stringify(resultAppYaml)}`);
 
-      var nodeVersion = _shelljs.default.exec(`meteor node -v ${this.ci ? '--allow-superuser' : ''}`, {
+      var nodeVersion = this.nodeVersion || _shelljs.default.exec(`meteor node -v ${this.ci ? '--allow-superuser' : ''}`, {
         silent: true
       }).stdout.trim();
 
-      var npmVersion = _shelljs.default.exec(`meteor npm -v ${this.ci ? '--allow-superuser' : ''}`, {
+      var npmVersion = this.npmVersion || _shelljs.default.exec(`meteor npm -v ${this.ci ? '--allow-superuser' : ''}`, {
         silent: true
       }).stdout.trim();
 
