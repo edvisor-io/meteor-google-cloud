@@ -31,6 +31,8 @@ program
   .option('-ci, --ci', 'add --allow-superuser flag in meteor commands for running in CI')
   .option('-o, --output-dir <path>', 'build files output directory')
   .option('-k, --keep-output-dir', 'do not remove the output directory before start')
+  .option('--node-version <version>', 'set custom node version')
+  .option('--npm-version <version', 'set custom npm version')
   .parse(process.argv);
 
 // Pretty print logs
@@ -94,6 +96,8 @@ export default async function startup() {
       workingDir,
       ci: program.ci,
       env,
+      nodeVersion: program.nodeVersion,
+      npmVersion: program.npmVersion,
     });
 
     appEngine.prepareBundle();

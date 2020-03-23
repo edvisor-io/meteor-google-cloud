@@ -91,6 +91,8 @@ The Meteor Google Cloud CLI supports the following options:
   -q, --quiet               enable quite mode
   -ci, --ci                 add --allow-superuser flag in meteor commands for running in CI
   -h, --help                output usage information
+  --node-version <version>  set custom node version
+  --npm-version <version>   set custom npm version
 ```
 
 ## FAQ
