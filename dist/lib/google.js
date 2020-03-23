@@ -83,7 +83,12 @@ function () {
 
       _shelljs.default.sed('-i', '{{ METEOR_SETTINGS }}', `'${compactSettings}'`, `${this.workingDir}/bundle/app.yaml`);
 
-      _winston.default.debug(`the following app.yaml will be used:\n${JSON.stringify(_jsYaml.default.safeLoad(_fs.default.readFileSync(`${this.workingDir}/bundle/app.yaml`)))}`);
+      var resultAppYaml = _jsYaml.default.safeLoad(_fs.default.readFileSync(`${this.workingDir}/bundle/app.yaml`));
+
+      resultAppYaml.env_variables.MONGO_URL = '*****';
+      resultAppYaml.env_variables.MONGO_OPLOG_URL = '*****';
+
+      _winston.default.debug(`the following app.yaml will be used:\n${JSON.stringify(resultAppYaml)}`);
 
       var nodeVersion = _shelljs.default.exec(`meteor node -v ${this.ci ? '--allow-superuser' : ''}`, {
         silent: true

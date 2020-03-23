@@ -4,6 +4,8 @@ require("core-js/modules/es.object.assign");
 
 require("core-js/modules/es.string.replace");
 
+require("core-js/modules/es.string.split");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -61,9 +63,9 @@ function validateMeteor() {
   } // Determine major/minor version numbers by stripping non-numeric characters from release
 
 
-  var versionNumbers = release.replace(/[^0-9]/g, '');
-  var majorVersion = Number.parseInt(versionNumbers.charAt(0), 10);
-  var minorVersion = Number.parseInt(versionNumbers.charAt(1), 10); // Ensure current Meteor release is >= 1.4
+  var versionNumbers = release.replace(/[^0-9.]/g, '').split('.');
+  var majorVersion = Number.parseInt(versionNumbers[0], 10);
+  var minorVersion = Number.parseInt(versionNumbers[1], 10); // Ensure current Meteor release is >= 1.4
 
   _winston.default.debug('check current Meteor release >= 1.4');
 
