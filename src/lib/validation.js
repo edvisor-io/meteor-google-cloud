@@ -36,9 +36,9 @@ export function validateMeteor() {
   }
 
   // Determine major/minor version numbers by stripping non-numeric characters from release
-  const versionNumbers = release.replace(/[^0-9]/g, '');
-  const majorVersion = Number.parseInt(versionNumbers.charAt(0), 10);
-  const minorVersion = Number.parseInt(versionNumbers.charAt(1), 10);
+  const versionNumbers = release.replace(/[^0-9.]/g, '').split('.');
+  const majorVersion = Number.parseInt(versionNumbers[0], 10);
+  const minorVersion = Number.parseInt(versionNumbers[1], 10);
 
   // Ensure current Meteor release is >= 1.4
   winston.debug('check current Meteor release >= 1.4');
