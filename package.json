@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@hapi/joi": "^15.0.0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "command-exists": "^1.2.8",
     "commander": "^2.19.0",
     "core-js": "^3.0.0",
