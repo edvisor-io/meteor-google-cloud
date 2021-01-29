@@ -4,7 +4,7 @@
   "description": "Automate Meteor deployments on Google Cloud App Service Flexible",
   "main": "dist/main.js",
   "bin": {
-    "meteor-google-cloud": "./dist/bin/meteor-google-cloud.js"
+    "meteor-google-cloud": "dist/bin/meteor-google-cloud.js"
   },
   "watch": {
     "build": "src"
