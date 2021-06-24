@@ -15,7 +15,7 @@ automatic_scaling:
   max_num_instances: 2
 skip_files:
 - ^(.*/)?\.dockerignore$
-- ^(.*/)?\yarn-error.log$
+- ^(.*/)?yarn-error\.log$
 - ^(.*/)?\.git$
 - ^(.*/)?\.hg$
 - ^(.*/)?\.svn$
