@@ -19,7 +19,7 @@ env_variables:
   MAIL_URL:
 skip_files:
 - ^(.*/)?\.dockerignore$
-- ^(.*/)?\yarn-error.log$
+- ^(.*/)?yarn-error\.log$
 - ^(.*/)?\.git$
 - ^(.*/)?\.hg$
 - ^(.*/)?\.svn$
